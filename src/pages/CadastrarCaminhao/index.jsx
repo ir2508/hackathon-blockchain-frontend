@@ -23,18 +23,19 @@ const FormStyled = styled.form`
     padding-right: 30px;
 `
 
-const CadastrarEntrega = () => {
+const CadastrarCaminhao = () => {
     return (
         <ContainerStyled>
             <ConteudoPrincipalStyled>
-                <h2>Página Cadastrar Entrega</h2>
+                <h2>Página Cadastrar Caminhão</h2>
                 <FormStyled>
                     <Input label="Chave pública do caminhão" type="text" id="chavePublicaCaminhao" obrigatorio={true} />
-                    <Botao classBootstrap="btn-success">Cadastrar nova entrega</Botao>
+                    <Input label="Placa" type="text" id="placaCaminhao" obrigatorio={true} />
+                    <Botao classBootstrap="btn-success">Cadastrar novo caminhão</Botao>
                 </FormStyled>
             </ConteudoPrincipalStyled>
         </ContainerStyled>
     )
 }
 
-export default CadastrarEntrega
+export default CadastrarCaminhao

@@ -23,18 +23,19 @@ const FormStyled = styled.form`
     padding-right: 30px;
 `
 
-const CadastrarEntrega = () => {
+const AferirTemperatura = () => {
     return (
         <ContainerStyled>
             <ConteudoPrincipalStyled>
-                <h2>Página Cadastrar Entrega</h2>
+                <h2>Página Registrar Temperatura</h2>
                 <FormStyled>
-                    <Input label="Chave pública do caminhão" type="text" id="chavePublicaCaminhao" obrigatorio={true} />
-                    <Botao classBootstrap="btn-success">Cadastrar nova entrega</Botao>
+                    <Input label="ID da carga" type="text" id="idCarga" obrigatorio={true} />
+                    <Input label="Temperatura Celsius" type="text" id="temperatura" obrigatorio={true} />
+                    <Botao classBootstrap="btn-success">Registrar temperatura</Botao>
                 </FormStyled>
             </ConteudoPrincipalStyled>
         </ContainerStyled>
     )
 }
 
-export default CadastrarEntrega
+export default AferirTemperatura
