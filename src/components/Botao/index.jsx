@@ -6,9 +6,9 @@ const BotaoStyled = styled.button`
     margin-left: 20px;
 `
 
-const Botao = ({ children }) => {
+const Botao = ({ children, classBootstrap }) => {
     return (
-        <BotaoStyled>{children}</BotaoStyled>
+        <BotaoStyled className={`btn ${classBootstrap}`}>{children}</BotaoStyled>
     )
 }
 

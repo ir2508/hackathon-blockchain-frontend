@@ -32,14 +32,14 @@ const ItemListaEntregas = () => {
     return (
         <ItemListaStyled>
             <div>
-                <h3>Caminhão 1</h3>
+                <h3>Caminhão 1 - Produtos Farmacêuticos</h3>
                 <h5>5d41402abc4b2a76b9719d911017c592</h5>
             </div>
             <div>
                 <img src="/exemplo-grafico-linha.png" />
             </div>
             <div>
-                <Botao>Registrar temperatura</Botao><Botao>Finalizar entrega</Botao>
+                <Botao classBootstrap="btn-secondary">Registrar temperatura</Botao><Botao classBootstrap="btn-success">Finalizar entrega</Botao>
             </div>
         </ItemListaStyled>
     )
