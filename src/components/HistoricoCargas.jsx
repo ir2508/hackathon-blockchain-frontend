@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
+import CargaDetalhada from "./CargaDetalhada"
 
 const enderecoContratoCarga = "0x17A30522f67d7221EBA84f4ff307Cb6aA19b5E4D"
 const abiContratoCarga = [
@@ -32,7 +33,9 @@ const HistoricoCargas = ({ chaveCaminhao }) => {
       <h4>Histórico de cargas para {chaveCaminhao.slice(0, 8)}…</h4>
       <ul>
         {historico.length > 0 ? (
-          historico.map((id, index) => <li key={index}>Carga ID: {id}</li>)
+          historico.map((id) => (
+            <CargaDetalhada key={id} cargaId={id} />
+          ))
         ) : (
           <li>Nenhum histórico encontrado</li>
         )}
