@@ -1,6 +1,7 @@
 import { useState } from "react"
 import styled from "styled-components"
 import ConsultaCaminhoes from "../../components/ConsultaCaminhoes"
+import HistoricoCargas from "../../components/HistoricoCargas"
 import ItemListaEntregas from "../../components/ItemListaEntregas"
 
 const ContainerStyled = styled.div`
@@ -22,6 +23,13 @@ const SectionListaEntregasStyled = styled.section`
   overflow-y: auto;
   scrollbar-color: #444 #fff;
   padding-right: 30px;
+`
+const HistoricoStyled = styled.div`
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border-left: 4px solid #007bff;
 `
 
 const Monitoramento = () => {
@@ -58,6 +66,13 @@ const Monitoramento = () => {
                         </option>
                     ))}
                 </select>
+
+                {caminhaoSelecionado && (
+                    <HistoricoStyled>
+                        <HistoricoCargas chaveCaminhao={caminhaoSelecionado} />
+                    </HistoricoStyled>
+
+                )}
 
                 <SectionListaEntregasStyled>
                     {entregasFiltradas.map(entrega => (
