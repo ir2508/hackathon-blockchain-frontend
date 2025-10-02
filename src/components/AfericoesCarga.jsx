@@ -2,9 +2,7 @@ import { useEffect } from "react"
 import { ethers } from "ethers"
 
 const enderecoContratoCarnes = "0x42F904182B6653e7f910419b740D5eA84e94888f"
-const abiContratoCarnes = [
-    "function obterAfericoes(uint cargaId) view returns (tuple(int temperaturaDecimosCelsius, uint timestamp)[])"
-]
+const abiContratoCarnes = ["function obterAfericoes(uint cargaId) view returns (tuple(int temperaturaDecimosCelsius, uint timestamp)[])"]
 
 const AfericoesCarga = ({ cargaId, onAfericoesCarregadas }) => {
     const consultarAfericoes = async () => {

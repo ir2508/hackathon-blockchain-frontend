@@ -3,10 +3,7 @@ import { ethers } from "ethers"
 import { format } from "date-fns"
 
 const enderecoContratoCarnes = "0x42F904182B6653e7f910419b740D5eA84e94888f"
-const abiContratoCarnes = [
-    "function obterCarga(uint cargaId) view returns (uint, address, uint8)",
-    "function obterAfericoes(uint cargaId) view returns (tuple(int temperaturaDecimosCelsius, uint timestamp)[])"
-]
+const abiContratoCarnes = ["function obterCarga(uint cargaId) view returns (uint, address, uint8)", "function obterAfericoes(uint cargaId) view returns (tuple(int temperaturaDecimosCelsius, uint timestamp)[])"]
 
 const CargaDetalhada = ({ cargaId }) => {
     const [status, setStatus] = useState(null)
@@ -35,21 +32,28 @@ const CargaDetalhada = ({ cargaId }) => {
 
     const statusTexto = (s) => {
         switch (s) {
-            case 0: return "Em andamento"
-            case 1: return "Finalizada"
-            case 2: return "Rejeitada"
-            default: return "Desconhecido"
+            case 0:
+                return "Em andamento"
+            case 1:
+                return "Finalizada"
+            case 2:
+                return "Rejeitada"
+            default:
+                return "Desconhecido"
         }
     }
 
-    const afericoesTexto = afericoes.length > 0
-        ? afericoes.map((afericao, index) => {
-            const temp = (Number(afericao.temperaturaDecimosCelsius) / 10).toFixed(1)
-            const data = format(new Date(Number(afericao.timestamp) * 1000), "dd/MM")
-            return `${temp}°C ${index < afericoes.length - 1 ? ", " : ""}`
-            // return `${temp}°C (${data})${index < afericoes.length - 1 ? ", " : ""}`
-        }).join(" ")
-        : "Nenhuma"
+    const afericoesTexto =
+        afericoes.length > 0
+            ? afericoes
+                  .map((afericao, index) => {
+                      const temp = (Number(afericao.temperaturaDecimosCelsius) / 10).toFixed(1)
+                      const data = format(new Date(Number(afericao.timestamp) * 1000), "dd/MM")
+                      return `${temp}°C ${index < afericoes.length - 1 ? ", " : ""}`
+                      // return `${temp}°C (${data})${index < afericoes.length - 1 ? ", " : ""}`
+                  })
+                  .join(" ")
+            : "Nenhuma"
 
     return (
         <li>

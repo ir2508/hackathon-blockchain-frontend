@@ -5,7 +5,7 @@ import HistoricoCargas from "../../components/HistoricoCargas"
 import ItemListaEntregas from "../../components/ItemListaEntregas"
 
 const ContainerStyled = styled.div`
-  width: 100vw;
+  /* width: 100vw; */
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -13,7 +13,7 @@ const ContainerStyled = styled.div`
 `
 
 const ConteudoPrincipalStyled = styled.main`
-  min-width: 90%;
+  /* min-width: 90%; */
   height: 95vh;
 `
 
