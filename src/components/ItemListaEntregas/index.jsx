@@ -28,21 +28,20 @@ const ItemListaStyled = styled.div`
     }
 `
 
-const ItemListaEntregas = () => {
-    return (
-        <ItemListaStyled>
-            <div>
-                <h3>Caminhão 1 - Produtos Farmacêuticos</h3>
-                <h5>5d41402abc4b2a76b9719d911017c592</h5>
-            </div>
-            <div>
-                <img src="/exemplo-grafico-linha.png" />
-            </div>
-            <div>
-                <Botao classBootstrap="btn-secondary">Registrar temperatura</Botao><Botao classBootstrap="btn-success">Finalizar entrega</Botao>
-            </div>
-        </ItemListaStyled>
-    )
-}
+const ItemListaEntregas = ({ caminhao, tipo }) => (
+    <ItemListaStyled>
+        <div>
+            <h3>{caminhao} - {tipo}</h3>
+            <h5>ID da carga</h5>
+        </div>
+        <div>
+            <img src="/exemplo-grafico-linha.png" />
+        </div>
+        <div>
+            <Botao classBootstrap="btn-secondary">Registrar temperatura</Botao>
+            <Botao classBootstrap="btn-success">Finalizar entrega</Botao>
+        </div>
+    </ItemListaStyled>
+)
 
 export default ItemListaEntregas
