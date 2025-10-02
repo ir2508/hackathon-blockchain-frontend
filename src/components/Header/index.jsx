@@ -6,7 +6,9 @@ const HeaderStyled = styled.header`
     justify-content: space-between;
     align-items: center;
     background-color: #F0F1F2;
-    box-sizing: border-box;
+    box-shadow: 2px 2px 5px #ccc;
+
+    /* box-sizing: border-box; */
     width: 100vw;
     max-height: 150px;
     padding: 10px 80px;

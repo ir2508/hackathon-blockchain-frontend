@@ -15,6 +15,8 @@ const SectionPrincipalStyled = styled.section`
     height: 100vh; */
 
     display: flex;
+    justify-content: space-between;
+    padding: 50px 80px;
 `
 
 const LayoutDefault = () => {

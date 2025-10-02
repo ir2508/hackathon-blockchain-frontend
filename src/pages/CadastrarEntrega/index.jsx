@@ -3,16 +3,16 @@ import Botao from "../../components/Botao"
 import Input from "../../components/Input"
 
 const ContainerStyled = styled.div`
-    width: 100vw;
-    height: 100vh;
+    /* width: 100vw;
+    height: 100vh; */
     display: flex;
     justify-content: center;
     align-items: center;
 `
 
 const ConteudoPrincipalStyled = styled.main`
-    min-width: 50%;
-    height: 95vh;
+    /* min-width: 50%;
+    height: 95vh; */
 `
 
 const FormStyled = styled.form`

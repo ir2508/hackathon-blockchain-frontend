@@ -6,7 +6,7 @@ import ItemListaEntregas from "../../components/ItemListaEntregas"
 
 const ContainerStyled = styled.div`
   /* width: 100vw; */
-  height: 100vh;
+  /* height: 100vh; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,7 +14,7 @@ const ContainerStyled = styled.div`
 
 const ConteudoPrincipalStyled = styled.main`
   /* min-width: 90%; */
-  height: 95vh;
+  /* height: 95vh; */
 `
 
 const SectionListaEntregasStyled = styled.section`
