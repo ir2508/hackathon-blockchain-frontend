@@ -1,6 +1,10 @@
 import styled from "styled-components"
 import Input from "../Input"
 import Botao from "../Botao"
+import { useRecoilState } from "recoil"
+import { entregaSelecionadaState } from "../../recoil/entregasAtom"
+import FormTemperatura from "../FormTemperatura"
+import DetalhesEntrega from "../DetalhesEntrega"
 
 const AsideStyled = styled.aside`
     border: 1px solid #ccc;
@@ -11,14 +15,18 @@ const AsideStyled = styled.aside`
 `
 
 const Aside = () => {
-    return (
-        <AsideStyled>
-            <h2>Aside</h2>
-            <Input label="ID da carga" type="text" id="idCarga" obrigatorio={true} />
-            <Input label="Temperatura Celsius" type="text" id="temperatura" obrigatorio={true} />
-            <Botao classBootstrap="btn-success">Registrar temperatura</Botao>
-        </AsideStyled>
-    )
+    const [entregaSelecionada] = useRecoilState(entregaSelecionadaState)
+    return entregaSelecionada.idEntrega !== "" 
+    ? <AsideStyled>
+        {entregaSelecionada.acao === "registrarTemperatura" 
+        ? <FormTemperatura carga={entregaSelecionada} /> 
+        
+        : entregaSelecionada.acao === "exibirEntrega" 
+        ? <DetalhesEntrega carga={entregaSelecionada} /> : ""}
+        
+        </AsideStyled> 
+    
+    : ""
 }
 
 export default Aside
