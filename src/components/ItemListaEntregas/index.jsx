@@ -63,7 +63,7 @@ const ItemListaEntregas = ({ infoEntrega }) => {
         <ItemListaStyled>
             <div>
                 <h3>
-                    {infoEntrega.caminhao} - {infoEntrega.tipo}
+                    {infoEntrega.chavePublicaCaminhao} - {infoEntrega.tipoEntrega}
                 </h3>
                 <h5>
                     ID da carga: {infoEntrega.id} | Status: {infoEntrega.status}

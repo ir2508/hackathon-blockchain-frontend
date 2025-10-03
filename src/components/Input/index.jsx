@@ -5,10 +5,10 @@ const DivFormGroupStyled = styled.div`
     flex-direction: column;
 `
 
-const Input = ({ label, type, id, obrigatorio, value, disabled }) => {
+const Input = ({ label, type, id, obrigatorio, value, disabled, onChange }) => {
     return (
         <DivFormGroupStyled className="form-floating mb-3">
-            <input className="form-control" type={type} id={id} placeholder={label} required={obrigatorio} value={value} disabled={disabled}/>
+            <input className="form-control" type={type} id={id} placeholder={label} required={obrigatorio} value={value} disabled={disabled} onChange={onChange}/>
             <label htmlFor={id}>{label}</label>
         </DivFormGroupStyled>
     )

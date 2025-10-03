@@ -11,12 +11,5 @@ export const entregaSelecionadaState = atom({
 
 export const entregasState = atom({
     key: "entregasState",
-    default: [
-        {
-            id: 1,
-            caminhao: "tesste",
-            tipo: "tessste",
-            status: "Em andamento"
-        }
-    ],
+    default: [],
 })
