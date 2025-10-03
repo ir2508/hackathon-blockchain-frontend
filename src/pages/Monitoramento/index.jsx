@@ -4,7 +4,9 @@ import ConsultaCaminhoes from "../../components/ConsultaCaminhoes"
 import HistoricoCargas from "../../components/HistoricoCargas"
 import ItemListaEntregas from "../../components/ItemListaEntregas"
 import { useRecoilState } from "recoil"
-import { entregasState } from "../../recoil/entregasAtom"
+import { entregaSelecionadaState, entregasState } from "../../recoil/entregasAtom"
+import Select from "../../components/Select"
+import Botao from "../../components/Botao"
 
 const ContainerStyled = styled.div`
     /* width: 100vw; */
@@ -20,7 +22,6 @@ const SectionCargasStyled = styled.section`
 `
 
 const SectionListaEntregasStyled = styled.section`
-    margin-top: 50px;
     max-height: 100%;
     overflow-y: auto;
     scrollbar-color: #444 #fff;
@@ -33,9 +34,16 @@ const HistoricoStyled = styled.div`
     background-color: #f8f8f8;
     border-left: 4px solid #007bff;
 `
+const FilterAreaStyled = styled.section`
+    height: 80px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+`
 
 const Monitoramento = () => {
     const [listaEntregas, setListaEntregas] = useRecoilState(entregasState)
+    const [entregaSelecionada, setEntregaSelecionada] = useRecoilState(entregaSelecionadaState)
 
     const [caminhaoSelecionado, setCaminhaoSelecionado] = useState("")
     const [caminhoesContrato, setCaminhoesContrato] = useState([])
@@ -49,10 +57,38 @@ const Monitoramento = () => {
 
     const entregasFiltradas = caminhaoSelecionado ? entregas.filter((entrega) => entrega.caminhao === caminhaoSelecionado) : entregas
 
+    const handleAddCaminhao = (e) => {
+        e.preventDefault()
+         setEntregaSelecionada({
+            idEntrega: "0",
+            detalhesEntrega: {},
+            acao: "addCaminhao",
+        })
+    }
+    
+    const handleAddEntrega = (e) => {
+        e.preventDefault()
+         setEntregaSelecionada({
+            idEntrega: "0",
+            detalhesEntrega: {},
+            acao: "addEntrega",
+        })
+    }
+
     return (
         <ContainerStyled className="container">
             <SectionCargasStyled>
                 <h2>Página monitoramento</h2>
+                <FilterAreaStyled className="mt-5">
+                    <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} />
+                    <Select label="Filtrar por Entrega" type="text" id="entregas" obrigatorio={true} />
+                    <p>
+                        <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddCaminhao}>Adicionar Caminhão</Botao>
+                    </p>
+                    <p>
+                        <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddEntrega}>Adicionar Entrega</Botao>
+                    </p>
+                </FilterAreaStyled>
                 {/* 
                 <ConsultaCaminhoes onCaminhoesCarregados={setCaminhoesContrato} />
 
@@ -82,9 +118,9 @@ const Monitoramento = () => {
                     ))}
                 </SectionListaEntregasStyled> */}
 
-                <SectionListaEntregasStyled>
+                <SectionListaEntregasStyled className="mt-3">
                     {listaEntregas.map((entrega) => (
-                        <ItemListaEntregas key={entrega.id} infoEntrega={entrega}/>
+                        <ItemListaEntregas key={entrega.id} infoEntrega={entrega} />
                     ))}
                 </SectionListaEntregasStyled>
             </SectionCargasStyled>

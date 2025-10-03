@@ -38,7 +38,7 @@ const ItemListaEntregas = ({ infoEntrega }) => {
 
     const handleRegistrarTemperatura = (e) => {
         e.preventDefault()
-        
+
         setEntregaSelecionada({
             idEntrega: infoEntrega.id,
             detalhesEntrega: listaEntregas.filter((entrega) => entrega.id === infoEntrega.id),
@@ -56,7 +56,7 @@ const ItemListaEntregas = ({ infoEntrega }) => {
             idEntrega: infoEntrega.id,
             detalhesEntrega: listaEntregas.filter((entrega) => entrega.id === infoEntrega.id),
             acao: "exibirEntrega",
-        })                 
+        })
     }
 
     return (
@@ -73,16 +73,22 @@ const ItemListaEntregas = ({ infoEntrega }) => {
                 <img src="/exemplo-grafico-linha.png" />
             </div>
             <div>
-                <Botao classBootstrap="btn-secondary m-2" onClick={handleExibirEntrega}>
+                <Botao classBootstrap="btn-outline-success m-2" onClick={handleExibirEntrega}>
                     Ver Entrega
                 </Botao>
-                <Botao classBootstrap="btn-secondary m-2" onClick={handleRegistrarTemperatura}>
-                    Registrar temperatura
-                </Botao>
-                {/* <Botao classBootstrap="btn-secondary">Registrar temperatura</Botao> */}
-                <Botao classBootstrap="btn-success m-2" onClick={handleFinalizarEntrega}>
-                    Finalizar entrega
-                </Botao>
+
+                {infoEntrega.status !== "Finalizada" ? (
+                    <>
+                        <Botao classBootstrap="btn-outline-success m-2" onClick={handleRegistrarTemperatura}>
+                            Registrar temperatura
+                        </Botao>
+                        <Botao classBootstrap="btn-success m-2" onClick={handleFinalizarEntrega}>
+                            Finalizar entrega
+                        </Botao>
+                    </>
+                ) : (
+                    ""
+                )}
             </div>
         </ItemListaStyled>
     )

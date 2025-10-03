@@ -27,7 +27,6 @@ const Header = () => {
                 <NavLink to={"/"}>Monitoramento</NavLink>
                 <NavLink to={"/cadastro-caminhao"}>Cadastrar Caminhão</NavLink>
                 <NavLink to={"/cadastro-entrega"}>Cadastrar Entrega</NavLink>
-                <NavLink to={"/aferir-temperatura"}>Aferir Temperatura</NavLink>
             </MenuNavegacao>
         </HeaderStyled>
     )
