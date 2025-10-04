@@ -24,7 +24,7 @@ const FormAddEntrega = () => {
     const handleAddEntrega = (e) => {
         e.preventDefault()
         setListaEntregas((currentEntregas) => [...currentEntregas, novaEntrega])
-        console.log(listaEntregas)
+        // console.log(listaEntregas)
     }
 
     return (

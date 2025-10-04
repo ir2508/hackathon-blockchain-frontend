@@ -1,16 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import ConsultaCaminhoes from "../../components/ConsultaCaminhoes"
 import HistoricoCargas from "../../components/HistoricoCargas"
 import ItemListaEntregas from "../../components/ItemListaEntregas"
 import { useRecoilState } from "recoil"
-import { entregaSelecionadaState, entregasState } from "../../recoil/entregasAtom"
+import { entregaSelecionadaState, entregasFiltradasState, entregasState } from "../../recoil/entregasAtom"
 import Select from "../../components/Select"
 import Botao from "../../components/Botao"
+import { caminhaoSelecionadoState, caminhoesState } from "../../recoil/caminhoesAtom"
 
 const ContainerStyled = styled.div`
-    /* width: 100vw; */
-    /* height: 100vh; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,9 +42,12 @@ const FilterAreaStyled = styled.section`
 
 const Monitoramento = () => {
     const [listaEntregas, setListaEntregas] = useRecoilState(entregasState)
+    const [listaEntregasFiltradas, setEntregasFiltradas] = useRecoilState(entregasFiltradasState)
+    const [listaCaminhoes] = useRecoilState(caminhoesState)
     const [entregaSelecionada, setEntregaSelecionada] = useRecoilState(entregaSelecionadaState)
+    const [caminhaoSelecionado, setCaminhaoSelecionado] = useRecoilState(caminhaoSelecionadoState)
 
-    const [caminhaoSelecionado, setCaminhaoSelecionado] = useState("")
+    // const [caminhaoSelecionado, setCaminhaoSelecionado] = useState("")
     const [caminhoesContrato, setCaminhoesContrato] = useState([])
 
     const entregas = [
@@ -55,24 +57,35 @@ const Monitoramento = () => {
         { id: 4, caminhao: "0x789...", tipo: "Congelados" },
     ]
 
-    const entregasFiltradas = caminhaoSelecionado ? entregas.filter((entrega) => entrega.caminhao === caminhaoSelecionado) : entregas
+    // const entregasFiltradas = caminhaoSelecionado ? entregas.filter((entrega) => entrega.caminhao === caminhaoSelecionado) : entregas
 
     const handleAddCaminhao = (e) => {
         e.preventDefault()
-         setEntregaSelecionada({
+        setEntregaSelecionada({
             idEntrega: "0",
             detalhesEntrega: {},
             acao: "addCaminhao",
         })
     }
-    
+
     const handleAddEntrega = (e) => {
         e.preventDefault()
-         setEntregaSelecionada({
+        setEntregaSelecionada({
             idEntrega: "0",
             detalhesEntrega: {},
             acao: "addEntrega",
         })
+    }
+
+    const handleCaminhaoSelecionado = (e) => {
+        e.preventDefault()
+        setCaminhaoSelecionado({
+            placaCaminhao: e.target.value,
+            detalhesEntrega: listaCaminhoes.filter((caminhao) => caminhao.placaCaminhao === e.target.value),
+        })
+
+        console.log(caminhaoSelecionado)
+        console.log(caminhaoSelecionado)
     }
 
     return (
@@ -80,8 +93,8 @@ const Monitoramento = () => {
             <SectionCargasStyled>
                 <h2>Página monitoramento</h2>
                 <FilterAreaStyled className="mt-5">
-                    <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} />
-                    <Select label="Filtrar por Entrega" type="text" id="entregas" obrigatorio={true} />
+                    <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} onChange={handleCaminhaoSelecionado} conteudo={listaCaminhoes} />
+                    {/* <Select label="Filtrar por Entrega" type="text" id="entregas" obrigatorio={true} /> */}
                     <p>
                         <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddCaminhao}>Adicionar Caminhão</Botao>
                     </p>
@@ -119,7 +132,7 @@ const Monitoramento = () => {
                 </SectionListaEntregasStyled> */}
 
                 <SectionListaEntregasStyled className="mt-3">
-                    {listaEntregas.map((entrega) => (
+                    {listaEntregasFiltradas.map((entrega) => (
                         <ItemListaEntregas key={entrega.id} infoEntrega={entrega} />
                     ))}
                 </SectionListaEntregasStyled>

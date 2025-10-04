@@ -6,11 +6,12 @@ const DivFormGroupStyled = styled.div`
     min-width: 200px;
 `
 
-const Select = ({ label, type, id, obrigatorio, value, disabled }) => {
+const Select = ({ label, type, id, obrigatorio, onChange, disabled, conteudo }) => {
     return (
         <DivFormGroupStyled className="form-floating mb-3">
-            <select className="form-select" type={type} id={id} placeholder={label} required={obrigatorio} value={value} disabled={disabled}>
-                <option>Todos...</option>
+            <select className="form-select" type={type} id={id} placeholder={label} required={obrigatorio} onChange={onChange} disabled={disabled}>
+                <option>Todos</option>
+                {conteudo.map((item) => <option>{item.placaCaminhao}</option>)}
             </select>
 
             <label htmlFor={id}>{label}</label>
