@@ -66,15 +66,16 @@ const ItemListaEntregas = ({ infoEntrega }) => {
                     {infoEntrega.placaCaminhao} - {infoEntrega.tipoEntrega}
                 </h3>
                 <h5>
-                    ID da carga: {infoEntrega.id} | Status: {infoEntrega.status}
+                    ID da carga: {infoEntrega.id}
                 </h5>
+                <h5>Status: {infoEntrega.status}</h5>
             </div>
             <div>
                 <img src="/exemplo-grafico-linha.png" />
             </div>
             <div>
                 <Botao classBootstrap="btn-outline-success m-2" onClick={handleExibirEntrega}>
-                    Ver Entrega
+                    Detalhes
                 </Botao>
 
                 {infoEntrega.status !== "Finalizada" ? (

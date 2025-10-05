@@ -13,7 +13,7 @@ const AsideStyled = styled.aside`
     box-shadow: 2px 2px 5px #f0f1f2;
     border-radius: 5px;
     padding: 40px;
-    min-width: 350px;
+    min-width: 300px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -33,15 +33,15 @@ const Aside = () => {
     }
     return entregaSelecionada.idEntrega !== "" ? (
         <AsideStyled>
-            {entregaSelecionada.acao === "registrarTemperatura" 
-            ? <FormTemperatura carga={entregaSelecionada} /> 
-            : entregaSelecionada.acao === "exibirEntrega" 
-                ? <DetalhesEntrega carga={entregaSelecionada} /> 
-                : entregaSelecionada.acao === "addCaminhao" 
-                    ? <FormAddCaminhao carga={entregaSelecionada} /> 
-                    : entregaSelecionada.acao === "addEntrega" 
-                        ? <FormAddEntrega carga={entregaSelecionada} /> 
-                        : ""}
+            {entregaSelecionada.acao === "registrarTemperatura"
+                ? <FormTemperatura carga={entregaSelecionada} />
+                : entregaSelecionada.acao === "exibirEntrega"
+                    ? <DetalhesEntrega carga={entregaSelecionada} />
+                    : entregaSelecionada.acao === "addCaminhao"
+                        ? <FormAddCaminhao carga={entregaSelecionada} />
+                        : entregaSelecionada.acao === "addEntrega"
+                            ? <FormAddEntrega carga={entregaSelecionada} />
+                            : ""}
 
             <div className="mt-5  d-md-flex justify-content-md-center ">
                 <Botao classBootstrap={"btn-outline-danger"} onClick={handleFecharAside}>

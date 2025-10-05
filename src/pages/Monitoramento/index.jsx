@@ -7,7 +7,7 @@ import { useRecoilState } from "recoil"
 import { entregaSelecionadaState, entregasFiltradasState, entregasState } from "../../recoil/entregasAtom"
 import Select from "../../components/Select"
 import Botao from "../../components/Botao"
-import { caminhaoSelecionadoState, caminhoesState } from "../../recoil/caminhoesAtom"
+import { caminhaoSelecionadoState, caminhoesState, placasCaminhoesState } from "../../recoil/caminhoesAtom"
 
 const ContainerStyled = styled.div`
     display: flex;
@@ -17,11 +17,11 @@ const ContainerStyled = styled.div`
 
 const SectionCargasStyled = styled.section`
     min-width: 90%;
-    height: 60vh;
+    height: 50vh;
 `
 
 const SectionListaEntregasStyled = styled.section`
-    max-height: 100%;
+    max-height: 90%;
     overflow-y: auto;
     scrollbar-color: #444 #fff;
     padding-right: 30px;
@@ -46,6 +46,8 @@ const Monitoramento = () => {
     const [listaCaminhoes] = useRecoilState(caminhoesState)
     const [entregaSelecionada, setEntregaSelecionada] = useRecoilState(entregaSelecionadaState)
     const [caminhaoSelecionado, setCaminhaoSelecionado] = useRecoilState(caminhaoSelecionadoState)
+    const [listaPlacas] = useRecoilState(placasCaminhoesState)
+
 
     // const [caminhaoSelecionado, setCaminhaoSelecionado] = useState("")
     const [caminhoesContrato, setCaminhoesContrato] = useState([])
@@ -93,7 +95,7 @@ const Monitoramento = () => {
             <SectionCargasStyled>
                 <h2>Monitoramento de entregas</h2>
                 <FilterAreaStyled className="mt-5">
-                    <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} onChange={handleCaminhaoSelecionado} conteudo={listaCaminhoes} />
+                    <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} onChange={handleCaminhaoSelecionado} conteudo={listaPlacas} />
                     {/* <Select label="Filtrar por Entrega" type="text" id="entregas" obrigatorio={true} /> */}
                     <p>
                         <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddCaminhao}>Adicionar Caminhão</Botao>

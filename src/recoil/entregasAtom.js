@@ -15,8 +15,6 @@ export const entregasState = atom({
     default: [],
 })
 
-
-
 export const entregasFiltradasState = selector({
     key: "entregasFiltradasState",
     get: ({ get }) => {
@@ -26,7 +24,6 @@ export const entregasFiltradasState = selector({
         if (!caminhaoSelecionado?.placaCaminhao || caminhaoSelecionado?.placaCaminhao === "Todos") {
             return entregas
         }
-
 
         return entregas.filter(
             (entrega) => entrega.placaCaminhao === caminhaoSelecionado.placaCaminhao

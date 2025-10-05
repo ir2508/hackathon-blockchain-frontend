@@ -16,7 +16,7 @@ const SectionPrincipalStyled = styled.section`
 
     display: flex;
     justify-content: space-between;
-    padding: 50px 80px;
+    padding: 50px;
 `
 
 const LayoutDefault = () => {

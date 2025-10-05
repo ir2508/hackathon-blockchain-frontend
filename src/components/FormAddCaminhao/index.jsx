@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { useRecoilState } from "recoil"
 import Botao from "../Botao"
 import Input from "../Input"
@@ -8,6 +9,7 @@ const FormAddCaminhao = () => {
     const [listaCaminhoes, setListaCaminhoes] = useRecoilState(caminhoesState)
 
     const [novoCaminhao, setNovoCaminhao] = useState({
+        id: uuidv4(),
         chavePublicaCaminhao: "",
         placaCaminhao: "",
     })
@@ -21,6 +23,10 @@ const FormAddCaminhao = () => {
 
     const handleAddCaminhao = (e) => {
         e.preventDefault()
+        setNovoCaminhao({
+            ...novoCaminhao,
+            id: uuidv4(),
+        })
         setListaCaminhoes((currentCaminhoes) => [...currentCaminhoes, novoCaminhao])
         // console.log(listaCaminhoes)
     }
