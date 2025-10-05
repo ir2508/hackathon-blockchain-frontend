@@ -9,7 +9,7 @@ const FormAddEntrega = () => {
 
     const [novaEntrega, setNovaEntrega] = useState({
         id: 1,
-        chavePublicaCaminhao: "",
+        placaCaminhao: "",
         tipoEntrega: "",
         status: "Em andamento",
     })
@@ -29,7 +29,7 @@ const FormAddEntrega = () => {
 
     return (
         <form>
-            <Input label="Chave pública do caminhão" type="text" id="chavePublicaCaminhao" onChange={handleChange} obrigatorio={true} />
+            <Input label="Placa do caminhão" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} />
             <Input label="Tipo" type="text" id="tipoEntrega" onChange={handleChange} obrigatorio={true} />
             <Input label="Status" type="text" id="statusEntrega" obrigatorio={true} value={"Em andamento"} disabled={true} />
             <Botao classBootstrap="btn-success" onClick={handleAddEntrega}>

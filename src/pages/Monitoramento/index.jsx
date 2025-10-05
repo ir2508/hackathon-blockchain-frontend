@@ -81,7 +81,7 @@ const Monitoramento = () => {
         e.preventDefault()
         setCaminhaoSelecionado({
             placaCaminhao: e.target.value,
-            detalhesEntrega: listaCaminhoes.filter((caminhao) => caminhao.placaCaminhao === e.target.value),
+            detalhesCaminhao: listaCaminhoes.filter((caminhao) => caminhao.placaCaminhao === e.target.value),
         })
 
         console.log(caminhaoSelecionado)
@@ -91,7 +91,7 @@ const Monitoramento = () => {
     return (
         <ContainerStyled className="container">
             <SectionCargasStyled>
-                <h2>Página monitoramento</h2>
+                <h2>Monitoramento de entregas</h2>
                 <FilterAreaStyled className="mt-5">
                     <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} onChange={handleCaminhaoSelecionado} conteudo={listaCaminhoes} />
                     {/* <Select label="Filtrar por Entrega" type="text" id="entregas" obrigatorio={true} /> */}

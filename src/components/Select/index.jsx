@@ -11,7 +11,7 @@ const Select = ({ label, type, id, obrigatorio, onChange, disabled, conteudo }) 
         <DivFormGroupStyled className="form-floating mb-3">
             <select className="form-select" type={type} id={id} placeholder={label} required={obrigatorio} onChange={onChange} disabled={disabled}>
                 <option>Todos</option>
-                {conteudo.map((item) => <option>{item.placaCaminhao}</option>)}
+                {conteudo.map((item) => <option key={item.placaCaminhao}>{item.placaCaminhao}</option>)}
             </select>
 
             <label htmlFor={id}>{label}</label>

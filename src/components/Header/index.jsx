@@ -25,8 +25,8 @@ const Header = () => {
             <h1>..</h1>
             <MenuNavegacao>
                 <NavLink to={"/"}>Monitoramento</NavLink>
-                <NavLink to={"/cadastro-caminhao"}>Cadastrar Caminhão</NavLink>
-                <NavLink to={"/cadastro-entrega"}>Cadastrar Entrega</NavLink>
+                {/* <NavLink to={"/cadastro-caminhao"}>Cadastrar Caminhão</NavLink>
+                <NavLink to={"/cadastro-entrega"}>Cadastrar Entrega</NavLink> */}
             </MenuNavegacao>
         </HeaderStyled>
     )

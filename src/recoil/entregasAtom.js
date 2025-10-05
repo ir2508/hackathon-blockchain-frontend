@@ -23,12 +23,13 @@ export const entregasFiltradasState = selector({
         const entregas = get(entregasState)
         const caminhaoSelecionado = get(caminhaoSelecionadoState)
 
-        if (!caminhaoSelecionado?.placaCaminhao) {
-            return entregas // se nenhum caminhão estiver selecionado, mostra todas
+        if (!caminhaoSelecionado?.placaCaminhao || caminhaoSelecionado?.placaCaminhao === "Todos") {
+            return entregas
         }
 
+
         return entregas.filter(
-            (entrega) => entrega.caminhaoId === caminhaoSelecionado.placaCaminhao
+            (entrega) => entrega.placaCaminhao === caminhaoSelecionado.placaCaminhao
         )
     },
 })
