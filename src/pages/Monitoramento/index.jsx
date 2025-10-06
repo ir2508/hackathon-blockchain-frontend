@@ -3,11 +3,13 @@ import styled from "styled-components"
 import ConsultaCaminhoes from "../../components/ConsultaCaminhoes"
 import HistoricoCargas from "../../components/HistoricoCargas"
 import ItemListaEntregas from "../../components/ItemListaEntregas"
-import { useRecoilState } from "recoil"
+// import { useRecoilState } from "recoil"
 import { entregaSelecionadaState, entregasFiltradasState, entregasState } from "../../recoil/entregasAtom"
 import Select from "../../components/Select"
 import Botao from "../../components/Botao"
 import { caminhaoSelecionadoState, caminhoesState, placasCaminhoesState } from "../../recoil/caminhoesAtom"
+
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 
 const ContainerStyled = styled.div`
     display: flex;
@@ -48,18 +50,14 @@ const Monitoramento = () => {
     const [caminhaoSelecionado, setCaminhaoSelecionado] = useRecoilState(caminhaoSelecionadoState)
     const [listaPlacas] = useRecoilState(placasCaminhoesState)
 
+    
+    const setCaminhoes = useSetRecoilState(caminhoesState)
 
-    // const [caminhaoSelecionado, setCaminhaoSelecionado] = useState("")
-    const [caminhoesContrato, setCaminhoesContrato] = useState([])
+    // Pega o endereço do caminhão selecionado
+    const enderecoCaminhaoSelecionado = caminhaoSelecionado?.detalhesCaminhao?.[0]?.endereco
+    // Busca as cargas do caminhão selecionado (retorna array de ids)
+    const listaCargas = HistoricoCargas({ chaveCaminhao: enderecoCaminhaoSelecionado })
 
-    const entregas = [
-        { id: 1, caminhao: "0x123...", tipo: "Congelados" },
-        { id: 2, caminhao: "0x456...", tipo: "Congelados" },
-        { id: 3, caminhao: "0x123...", tipo: "Congelados" },
-        { id: 4, caminhao: "0x789...", tipo: "Congelados" },
-    ]
-
-    // const entregasFiltradas = caminhaoSelecionado ? entregas.filter((entrega) => entrega.caminhao === caminhaoSelecionado) : entregas
 
     const handleAddCaminhao = (e) => {
         e.preventDefault()
@@ -90,10 +88,21 @@ const Monitoramento = () => {
         console.log(caminhaoSelecionado)
     }
 
+    // Função chamada pelo ConsultaCaminhoes
+    const handleCaminhoesCarregados = (caminhoes) => {
+        setCaminhoes(
+            caminhoes.map(c => ({
+                placaCaminhao: c.placa,
+                endereco: c.endereco
+            }))
+        )
+    }
+
     return (
         <ContainerStyled className="container">
             <SectionCargasStyled>
                 <h2>Monitoramento de entregas</h2>
+                <ConsultaCaminhoes onCaminhoesCarregados={handleCaminhoesCarregados} />
                 <FilterAreaStyled className="mt-5">
                     <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} onChange={handleCaminhaoSelecionado} conteudo={listaPlacas} />
                     {/* <Select label="Filtrar por Entrega" type="text" id="entregas" obrigatorio={true} /> */}
@@ -104,39 +113,23 @@ const Monitoramento = () => {
                         <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddEntrega}>Adicionar Entrega</Botao>
                     </p>
                 </FilterAreaStyled>
-                {/* 
-                <ConsultaCaminhoes onCaminhoesCarregados={setCaminhoesContrato} />
 
-                <label htmlFor="select-caminhao">Selecione o caminhão:</label>
-                <select id="select-caminhao" onChange={(e) => setCaminhaoSelecionado(e.target.value)}>
-                    <option value="">Todos os caminhões</option>
-                    {caminhoesContrato.map((c, index) => (
-                        <option key={index} value={c.endereco}>
-                            {c.placa} ({c.endereco.slice(0, 6)}…)
-                        </option>
-                    ))}
-                </select>
-
-                {caminhaoSelecionado && (
-                    <HistoricoStyled>
-                        <HistoricoCargas chaveCaminhao={caminhaoSelecionado} />
-                    </HistoricoStyled>
-                )} */}
-
-                {/* <SectionListaEntregasStyled>
-                    {entregasFiltradas.map(entrega => (
-                        <ItemListaEntregas
-                            key={entrega.id}
-                            caminhao={entrega.caminhao}
-                            tipo={entrega.tipo}
-                        />
-                    ))}
-                </SectionListaEntregasStyled> */}
 
                 <SectionListaEntregasStyled className="mt-3">
                     {listaEntregasFiltradas.map((entrega) => (
                         <ItemListaEntregas key={entrega.id} infoEntrega={entrega} />
                     ))}
+                </SectionListaEntregasStyled>
+
+                Usando 
+                <SectionListaEntregasStyled className="mt-3">
+                    {listaCargas.length > 0 ? (
+                        listaCargas.map((idCarga) => (
+                            <ItemListaEntregas key={idCarga} infoEntrega={{ id: idCarga }} />
+                        ))
+                    ) : (
+                        <p>Selecione um caminhão para ver as entregas.</p>
+                    )}
                 </SectionListaEntregasStyled>
             </SectionCargasStyled>
         </ContainerStyled>
