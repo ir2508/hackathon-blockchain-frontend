@@ -10,13 +10,10 @@ const ContainerStyled = styled.div`
 `
 
 const SectionPrincipalStyled = styled.section`
-    /* box-sizing: border-box;
-    max-width: 100vw;
-    height: 100vh; */
-
     display: flex;
     justify-content: space-between;
     padding: 50px;
+    box-sizing: border-box;
 `
 
 const LayoutDefault = () => {
