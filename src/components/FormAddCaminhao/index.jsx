@@ -33,7 +33,7 @@ const FormAddCaminhao = () => {
 
     return (
         <form>
-            <Input label="Chave pública do caminhão" type="text" id="chavePublicaCaminhao" onChange={handleChange} obrigatorio={true} />
+            {/* <Input label="Chave pública do caminhão" type="text" id="chavePublicaCaminhao" onChange={handleChange} obrigatorio={true} /> */}
             <Input label="Placa" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} />
             <Botao classBootstrap="btn-success" onClick={handleAddCaminhao}>Cadastrar novo caminhão</Botao>
         </form>

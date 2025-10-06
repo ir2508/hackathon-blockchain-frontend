@@ -106,9 +106,9 @@ const Monitoramento = () => {
                 <FilterAreaStyled className="mt-5">
                     <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} onChange={handleCaminhaoSelecionado} conteudo={listaPlacas} />
                     {/* <Select label="Filtrar por Entrega" type="text" id="entregas" obrigatorio={true} /> */}
-                    <p>
+                    {/* <p>
                         <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddCaminhao}>Adicionar Caminhão</Botao>
-                    </p>
+                    </p> */}
                     <p>
                         <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddEntrega}>Adicionar Entrega</Botao>
                     </p>
