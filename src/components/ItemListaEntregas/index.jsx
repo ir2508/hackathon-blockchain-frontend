@@ -59,11 +59,17 @@ const ItemListaEntregas = ({ infoEntrega }) => {
         })
     }
 
+    const formatarEndereco = (endereco) => {
+        if (!endereco || endereco.length < 10) return endereco
+        return `${endereco.slice(0, 6)}...${endereco.slice(-4)}`
+    }
+
+
     return (
         <ItemListaStyled>
             <div>
                 <h3>
-                    {infoEntrega.placaCaminhao} - {infoEntrega.address}
+                    {infoEntrega.placaCaminhao} - {formatarEndereco(infoEntrega.address)}
                 </h3>
                 <h5>
                     ID da carga: {infoEntrega.id}
