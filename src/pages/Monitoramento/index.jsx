@@ -125,12 +125,12 @@ const Monitoramento = () => {
                     </p>
                 </FilterAreaStyled>
 
-                {/* ✅ Dispara a busca de histórico de cargas */}
+                {/* Dispara a busca de histórico de cargas */}
                 {enderecoCaminhaoSelecionado && (
                     <HistoricoCargas chaveCaminhao={enderecoCaminhaoSelecionado} />
                 )}
 
-                {/* ✅ Lista de cargas detalhadas */}
+                {/* Lista de cargas detalhadas */}
                 <SectionListaEntregasStyled className="mt-3">
                     {listaCargas.length > 0 ? (
                         listaCargas.map((carga) => {

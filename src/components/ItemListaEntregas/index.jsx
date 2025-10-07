@@ -2,6 +2,7 @@ import styled from "styled-components"
 import Botao from "../Botao"
 import { useRecoilState } from "recoil"
 import { entregaSelecionadaState, entregasState } from "../../recoil/entregasAtom"
+import GraficoTemperatura from "../GraficoTemperatura"
 
 const ItemListaStyled = styled.div`
     display: flex;
@@ -69,16 +70,15 @@ const ItemListaEntregas = ({ infoEntrega }) => {
         <ItemListaStyled>
             <div>
                 <h3>
-                    {infoEntrega.placaCaminhao} - {formatarEndereco(infoEntrega.address)}
+                    {infoEntrega.placaCaminhao}
                 </h3>
+                <h5> {formatarEndereco(infoEntrega.address)}</h5>
                 <h5>
                     ID da carga: {infoEntrega.id}
                 </h5>
                 <h5>Status: {infoEntrega.status}</h5>
             </div>
-            <div>
-                <img src="/exemplo-grafico-linha.png" />
-            </div>
+            <GraficoTemperatura afericoes={infoEntrega.afericoes} id={infoEntrega.id} />
             <div>
                 <Botao classBootstrap="btn-outline-success m-2" onClick={handleExibirEntrega}>
                     Detalhes
