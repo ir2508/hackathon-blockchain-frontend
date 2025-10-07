@@ -14,10 +14,13 @@ import { format } from "date-fns"
 
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip, Legend)
 
-const GraficoTemperatura = ({ afericoes, id }) => {
+const GraficoTemperatura = ({ afericoes, id, status }) => {
     const labels = afericoes.map((a) =>
         format(new Date(a.timestamp * 1000), "dd/MM/yyyy HH:mm")
     )
+
+    const corLinha = status === "Rejeitada" ? "rgba(255, 99, 132, 1)" : "rgba(75,192,192,1)"
+    const corFundo = status === "Rejeitada" ? "rgba(255, 99, 132, 0.2)" : "rgba(75,192,192,0.2)"
 
     const data = {
         labels,
@@ -25,8 +28,8 @@ const GraficoTemperatura = ({ afericoes, id }) => {
             {
                 label: "Temperatura (°C)",
                 data: afericoes.map((a) => a.temperatura),
-                borderColor: "rgba(75,192,192,1)",
-                backgroundColor: "rgba(75,192,192,0.2)",
+                borderColor: corLinha,
+                backgroundColor: corFundo,
                 tension: 0.3,
                 pointRadius: 3
             }

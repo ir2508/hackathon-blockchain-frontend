@@ -4,6 +4,18 @@ import { useRecoilState } from "recoil"
 import { entregaSelecionadaState, entregasState } from "../../recoil/entregasAtom"
 import GraficoTemperatura from "../GraficoTemperatura"
 
+    const StatusTexto = styled.h5`
+        color: ${({ status }) =>
+            status === "Finalizada"
+                ? "green"
+                : status === "Rejeitada"
+                ? "red"
+                : status === "Em andamento"
+                ? "orange"
+                : "black"};
+        font-weight: bold;
+    `
+
 const ItemListaStyled = styled.div`
     display: flex;
     justify-content: space-between;
@@ -76,9 +88,12 @@ const ItemListaEntregas = ({ infoEntrega }) => {
                 <h5>
                     ID da carga: {infoEntrega.id}
                 </h5>
-                <h5>Status: {infoEntrega.status}</h5>
+                <StatusTexto status={infoEntrega.status}>
+                    Status: {infoEntrega.status}
+                </StatusTexto>
+
             </div>
-            <GraficoTemperatura afericoes={infoEntrega.afericoes} id={infoEntrega.id} />
+            <GraficoTemperatura afericoes={infoEntrega.afericoes} id={infoEntrega.id} status={infoEntrega.status} />
             <div>
                 <Botao classBootstrap="btn-outline-success m-2" onClick={handleExibirEntrega}>
                     Detalhes
