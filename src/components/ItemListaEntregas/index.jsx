@@ -2,6 +2,19 @@ import styled from "styled-components"
 import Botao from "../Botao"
 import { useRecoilState } from "recoil"
 import { entregaSelecionadaState, entregasState } from "../../recoil/entregasAtom"
+import GraficoTemperatura from "../GraficoTemperatura"
+
+    const StatusTexto = styled.h5`
+        color: ${({ status }) =>
+            status === "Finalizada"
+                ? "green"
+                : status === "Rejeitada"
+                ? "red"
+                : status === "Em andamento"
+                ? "orange"
+                : "black"};
+        font-weight: bold;
+    `
 
 const ItemListaStyled = styled.div`
     display: flex;
@@ -59,20 +72,28 @@ const ItemListaEntregas = ({ infoEntrega }) => {
         })
     }
 
+    const formatarEndereco = (endereco) => {
+        if (!endereco || endereco.length < 10) return endereco
+        return `${endereco.slice(0, 6)}...${endereco.slice(-4)}`
+    }
+
+
     return (
         <ItemListaStyled>
             <div>
                 <h3>
-                    {infoEntrega.placaCaminhao} - {infoEntrega.tipoEntrega}
+                    {infoEntrega.placaCaminhao}
                 </h3>
+                <h5> {formatarEndereco(infoEntrega.address)}</h5>
                 <h5>
                     ID da carga: {infoEntrega.id}
                 </h5>
-                <h5>Status: {infoEntrega.status}</h5>
+                <StatusTexto status={infoEntrega.status}>
+                    Status: {infoEntrega.status}
+                </StatusTexto>
+
             </div>
-            <div>
-                <img src="/exemplo-grafico-linha.png" />
-            </div>
+            <GraficoTemperatura afericoes={infoEntrega.afericoes} id={infoEntrega.id} status={infoEntrega.status} />
             <div>
                 <Botao classBootstrap="btn-outline-success m-2" onClick={handleExibirEntrega}>
                     Detalhes

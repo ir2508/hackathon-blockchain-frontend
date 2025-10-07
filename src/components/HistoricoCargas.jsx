@@ -1,37 +1,46 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { ethers } from "ethers"
-import CargaDetalhada from "./CargaDetalhada"
+import { historicoCargasState } from "../recoil/entregasAtom"
+import { caminhoesState } from "../recoil/caminhoesAtom"
+import { useSetRecoilState, useRecoilValue } from "recoil"
+import { obterCargaDetalhada } from "../utils/cargaDetalhada"
 
-const enderecoContratoCarga = "0x17A30522f67d7221EBA84f4ff307Cb6aA19b5E4D"
-const abiContratoCarga = ["function obterHistorico(address chaveCaminhao) view returns (uint[])"]
+const enderecoContratoCarga = "0xB76e144A9632D5E1Cc8E4A8d42865F11652a490D"
+const abiContratoCarga = [
+    "function obterHistorico(address chaveCaminhao) view returns (uint[])"
+]
 
 const HistoricoCargas = ({ chaveCaminhao }) => {
-    const [historico, setHistorico] = useState([])
-
-    const consultarHistorico = async () => {
-        try {
-            const provider = new ethers.JsonRpcProvider("https://testnet-passet-hub-eth-rpc.polkadot.io")
-            const contrato = new ethers.Contract(enderecoContratoCarga, abiContratoCarga, provider)
-
-            const resultado = await contrato.obterHistorico(chaveCaminhao)
-            setHistorico(resultado.map((id) => Number(id)))
-        } catch (erro) {
-            console.error("Erro ao consultar histórico:", erro)
-        }
-    }
+    const setHistorico = useSetRecoilState(historicoCargasState)
+    const caminhoes = useRecoilValue(caminhoesState)
 
     useEffect(() => {
+        const consultarHistorico = async () => {
+            try {
+                const provider = new ethers.JsonRpcProvider("https://testnet-passet-hub-eth-rpc.polkadot.io")
+                const contrato = new ethers.Contract(enderecoContratoCarga, abiContratoCarga, provider)
+
+                const resultado = await contrato.obterHistorico(chaveCaminhao)
+                const ids = resultado.map((id) => Number(id))
+
+                // 🔍 Busca os detalhes de cada carga
+                const cargasDetalhadas = await Promise.all(
+                    ids.map((id) => obterCargaDetalhada(id, caminhoes))
+                )
+
+                setHistorico(cargasDetalhadas)
+            } catch (erro) {
+                console.error("Erro ao consultar histórico:", erro)
+                setHistorico([])
+            }
+        }
+
         if (chaveCaminhao) {
             consultarHistorico()
         }
-    }, [chaveCaminhao])
+    }, [chaveCaminhao, setHistorico])
 
-    return (
-        <div style={{ marginTop: "20px" }}>
-            <h4>Histórico de cargas para {chaveCaminhao.slice(0, 8)}…</h4>
-            <ul>{historico.length > 0 ? historico.map((id) => <CargaDetalhada key={id} cargaId={id} />) : <li>Nenhum histórico encontrado</li>}</ul>
-        </div>
-    )
+    return null
 }
 
 export default HistoricoCargas

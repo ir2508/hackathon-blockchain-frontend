@@ -31,3 +31,8 @@ export const entregasFiltradasState = selector({
     },
 })
 
+export const historicoCargasState = atom({
+    key: "historicoCargasState",
+    default: [],
+})
+

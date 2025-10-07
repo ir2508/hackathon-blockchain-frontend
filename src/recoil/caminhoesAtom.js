@@ -29,3 +29,14 @@ export const placasCaminhoesState = selector({
         // )
     },
 })
+
+export const placaPorEnderecoSelector = selector({
+    key: "placaPorEnderecoSelector",
+    get: ({ get }) => {
+        const caminhoes = get(caminhoesState)
+        return (endereco) => {
+            const caminhao = caminhoes.find((c) => c.endereco === endereco)
+            return caminhao?.placaCaminhao || null
+        }
+    }
+})
