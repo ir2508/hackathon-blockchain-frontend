@@ -63,7 +63,7 @@ const ItemListaEntregas = ({ infoEntrega }) => {
         <ItemListaStyled>
             <div>
                 <h3>
-                    {infoEntrega.placaCaminhao} - {infoEntrega.tipoEntrega}
+                    {infoEntrega.placaCaminhao} - {infoEntrega.address}
                 </h3>
                 <h5>
                     ID da carga: {infoEntrega.id}

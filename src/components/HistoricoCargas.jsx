@@ -1,7 +1,9 @@
 import { useEffect } from "react"
 import { ethers } from "ethers"
-import { useSetRecoilState } from "recoil"
 import { historicoCargasState } from "../recoil/entregasAtom"
+import { caminhoesState } from "../recoil/caminhoesAtom"
+import { useSetRecoilState, useRecoilValue } from "recoil"
+import { obterCargaDetalhada } from "../utils/cargaDetalhada"
 
 const enderecoContratoCarga = "0xB76e144A9632D5E1Cc8E4A8d42865F11652a490D"
 const abiContratoCarga = [
@@ -10,6 +12,7 @@ const abiContratoCarga = [
 
 const HistoricoCargas = ({ chaveCaminhao }) => {
     const setHistorico = useSetRecoilState(historicoCargasState)
+    const caminhoes = useRecoilValue(caminhoesState)
 
     useEffect(() => {
         const consultarHistorico = async () => {
@@ -18,9 +21,14 @@ const HistoricoCargas = ({ chaveCaminhao }) => {
                 const contrato = new ethers.Contract(enderecoContratoCarga, abiContratoCarga, provider)
 
                 const resultado = await contrato.obterHistorico(chaveCaminhao)
-
                 const ids = resultado.map((id) => Number(id))
-                setHistorico(ids)
+
+                // 🔍 Busca os detalhes de cada carga
+                const cargasDetalhadas = await Promise.all(
+                    ids.map((id) => obterCargaDetalhada(id, caminhoes))
+                )
+
+                setHistorico(cargasDetalhadas)
             } catch (erro) {
                 console.error("Erro ao consultar histórico:", erro)
                 setHistorico([])
@@ -32,7 +40,7 @@ const HistoricoCargas = ({ chaveCaminhao }) => {
         }
     }, [chaveCaminhao, setHistorico])
 
-    return null 
+    return null
 }
 
 export default HistoricoCargas
