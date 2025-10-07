@@ -11,6 +11,9 @@ import { caminhaoSelecionadoState, caminhoesState, placasCaminhoesState } from "
 
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 
+import { historicoCargasState } from "../../recoil/entregasAtom"
+
+
 const ContainerStyled = styled.div`
     display: flex;
     justify-content: center;
@@ -56,7 +59,9 @@ const Monitoramento = () => {
     // Pega o endereço do caminhão selecionado
     const enderecoCaminhaoSelecionado = caminhaoSelecionado?.detalhesCaminhao?.[0]?.endereco
     // Busca as cargas do caminhão selecionado (retorna array de ids)
-    const listaCargas = HistoricoCargas({ chaveCaminhao: enderecoCaminhaoSelecionado })
+    // const listaCargas = HistoricoCargas({ chaveCaminhao: enderecoCaminhaoSelecionado })
+    const listaCargas = useRecoilValue(historicoCargasState)
+
 
 
     const handleAddCaminhao = (e) => {
@@ -84,8 +89,6 @@ const Monitoramento = () => {
             detalhesCaminhao: listaCaminhoes.filter((caminhao) => caminhao.placaCaminhao === e.target.value),
         })
 
-        console.log(caminhaoSelecionado)
-        console.log(caminhaoSelecionado)
     }
 
     // Função chamada pelo ConsultaCaminhoes
@@ -104,29 +107,35 @@ const Monitoramento = () => {
                 <h2>Monitoramento de entregas</h2>
                 <ConsultaCaminhoes onCaminhoesCarregados={handleCaminhoesCarregados} />
                 <FilterAreaStyled className="mt-5">
-                    <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} onChange={handleCaminhaoSelecionado} conteudo={listaPlacas} />
-                    {/* <Select label="Filtrar por Entrega" type="text" id="entregas" obrigatorio={true} /> */}
-                    {/* <p>
-                        <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddCaminhao}>Adicionar Caminhão</Botao>
-                    </p> */}
+                    <Select
+                        label="Filtrar por Caminhão"
+                        type="text"
+                        id="caminhoes"
+                        obrigatorio={true}
+                        onChange={handleCaminhaoSelecionado}
+                        conteudo={listaPlacas}
+                    />
                     <p>
-                        <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddEntrega}>Adicionar Entrega</Botao>
+                        <Botao
+                            classBootstrap={"btn-outline-secondary"}
+                            onClick={handleAddEntrega}
+                        >
+                            Adicionar Entrega
+                        </Botao>
                     </p>
                 </FilterAreaStyled>
 
+                {/* ✅ Dispara a busca de histórico de cargas */}
+                {enderecoCaminhaoSelecionado && (
+                    <HistoricoCargas chaveCaminhao={enderecoCaminhaoSelecionado} />
+                )}
 
-                <SectionListaEntregasStyled className="mt-3">
-                    {listaEntregasFiltradas.map((entrega) => (
-                        <ItemListaEntregas key={entrega.id} infoEntrega={entrega} />
-                    ))}
-                </SectionListaEntregasStyled>
-
-                Usando 
+                {/* ✅ Lista de cargas detalhadas */}
                 <SectionListaEntregasStyled className="mt-3">
                     {listaCargas.length > 0 ? (
-                        listaCargas.map((idCarga) => (
-                            <ItemListaEntregas key={idCarga} infoEntrega={{ id: idCarga }} />
-                        ))
+                        listaCargas.map((carga) => {
+                            return <ItemListaEntregas key={carga.id} infoEntrega={carga} />
+                        })
                     ) : (
                         <p>Selecione um caminhão para ver as entregas.</p>
                     )}
@@ -134,6 +143,7 @@ const Monitoramento = () => {
             </SectionCargasStyled>
         </ContainerStyled>
     )
+
 }
 
 export default Monitoramento
