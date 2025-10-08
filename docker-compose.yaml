@@ -10,6 +10,30 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    networks:
+      # - laravel-network
+      - traefik
     environment:
       - HOST=0.0.0.0
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      - "traefik.enable=true"
+      # Roteador para HTTPS
+      - "traefik.http.routers.entregacongelada.rule=Host(`entrega-congelada.nanoarena.xyz`)"
+      - "traefik.http.routers.entregacongelada.entrypoints=websecure"
+      - "traefik.http.routers.entregacongelada.tls.certresolver=myresolver"
+      - "traefik.http.services.entregacongelada.loadbalancer.server.port=5173"
+      # Roteador para HTTP
+      - "traefik.http.routers.entregacongelada-http.rule=Host(`entrega-congelada.nanoarena.xyz`)"
+      - "traefik.http.routers.entregacongelada-http.entrypoints=web"
+
+# networks:
+#   laravel-network:
+
+networks:
+  traefik:
+    external: true
+  internal_network:
+    driver: bridge
