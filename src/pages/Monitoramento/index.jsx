@@ -13,7 +13,6 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 
 import { historicoCargasState } from "../../recoil/entregasAtom"
 
-
 const ContainerStyled = styled.div`
     display: flex;
     justify-content: center;
@@ -53,7 +52,6 @@ const Monitoramento = () => {
     const [caminhaoSelecionado, setCaminhaoSelecionado] = useRecoilState(caminhaoSelecionadoState)
     const [listaPlacas] = useRecoilState(placasCaminhoesState)
 
-    
     const setCaminhoes = useSetRecoilState(caminhoesState)
 
     // Pega o endereço do caminhão selecionado
@@ -61,8 +59,6 @@ const Monitoramento = () => {
     // Busca as cargas do caminhão selecionado (retorna array de ids)
     // const listaCargas = HistoricoCargas({ chaveCaminhao: enderecoCaminhaoSelecionado })
     const listaCargas = useRecoilValue(historicoCargasState)
-
-
 
     const handleAddCaminhao = (e) => {
         e.preventDefault()
@@ -94,9 +90,9 @@ const Monitoramento = () => {
     // Função chamada pelo ConsultaCaminhoes
     const handleCaminhoesCarregados = (caminhoes) => {
         setCaminhoes(
-            caminhoes.map(c => ({
+            caminhoes.map((c) => ({
                 placaCaminhao: c.placa,
-                endereco: c.endereco
+                endereco: c.endereco,
             }))
         )
     }
@@ -107,28 +103,16 @@ const Monitoramento = () => {
                 <h2>Monitoramento de entregas</h2>
                 <ConsultaCaminhoes onCaminhoesCarregados={handleCaminhoesCarregados} />
                 <FilterAreaStyled className="mt-2">
-                    <Select
-                        label="Filtrar por Caminhão"
-                        type="text"
-                        id="caminhoes"
-                        obrigatorio={true}
-                        onChange={handleCaminhaoSelecionado}
-                        conteudo={listaPlacas}
-                    />
+                    <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} onChange={handleCaminhaoSelecionado} conteudo={listaPlacas} />
                     <p>
-                        <Botao
-                            classBootstrap={"btn-outline-secondary"}
-                            onClick={handleAddEntrega}
-                        >
+                        <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddEntrega}>
                             Adicionar Entrega
                         </Botao>
                     </p>
                 </FilterAreaStyled>
 
                 {/* Dispara a busca de histórico de cargas */}
-                {enderecoCaminhaoSelecionado && (
-                    <HistoricoCargas chaveCaminhao={enderecoCaminhaoSelecionado} />
-                )}
+                {enderecoCaminhaoSelecionado && <HistoricoCargas chaveCaminhao={enderecoCaminhaoSelecionado} />}
 
                 {/* Lista de cargas detalhadas */}
                 <SectionListaEntregasStyled className="mt-3">
@@ -143,7 +127,6 @@ const Monitoramento = () => {
             </SectionCargasStyled>
         </ContainerStyled>
     )
-
 }
 
 export default Monitoramento

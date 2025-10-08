@@ -18,7 +18,7 @@ const FormTemperatura = ({ carga }) => {
     const handleChange = (e) => {
         setAfericao({
             ...afericao,
-            [e.target.id]: e.target.value,
+            [e.target.id]: e.target.value * 10,
         })
     }
 
@@ -30,6 +30,7 @@ const FormTemperatura = ({ carga }) => {
             idEntrega: idEntrega,
             timestamp: timestampAtual,
         })
+        console.log(afericao)
     }
 
     return (
