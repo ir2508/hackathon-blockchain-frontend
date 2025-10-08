@@ -17,7 +17,7 @@ const AsideStyled = styled.aside`
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-    justify-content: space-between; 
+    justify-content: space-between;
 `
 
 const Aside = () => {
@@ -33,18 +33,10 @@ const Aside = () => {
     }
     return entregaSelecionada.idEntrega !== "" ? (
         <AsideStyled>
-            {entregaSelecionada.acao === "registrarTemperatura"
-                ? <FormTemperatura carga={entregaSelecionada} />
-                : entregaSelecionada.acao === "exibirEntrega"
-                    ? <DetalhesEntrega carga={entregaSelecionada} />
-                    : entregaSelecionada.acao === "addCaminhao"
-                        ? <FormAddCaminhao carga={entregaSelecionada} />
-                        : entregaSelecionada.acao === "addEntrega"
-                            ? <FormAddEntrega carga={entregaSelecionada} />
-                            : ""}
+            {entregaSelecionada.acao === "registrarTemperatura" ? <FormTemperatura carga={entregaSelecionada} /> : entregaSelecionada.acao === "exibirEntrega" ? <DetalhesEntrega carga={entregaSelecionada} /> : entregaSelecionada.acao === "addCaminhao" ? <FormAddCaminhao carga={entregaSelecionada} /> : entregaSelecionada.acao === "addEntrega" ? <FormAddEntrega carga={entregaSelecionada} /> : ""}
 
-            <div className="mt-5  d-md-flex justify-content-md-center ">
-                <Botao classBootstrap={"btn-outline-danger"} onClick={handleFecharAside}>
+            <div className="mt-3 d-md-flex justify-content-md-center ">
+                <Botao classBootstrap={"btn-outline-danger"} onClick={handleFecharAside} largura={"100%"}>
                     Fechar
                 </Botao>
             </div>

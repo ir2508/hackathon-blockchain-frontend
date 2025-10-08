@@ -6,9 +6,7 @@ import { useSetRecoilState, useRecoilValue } from "recoil"
 import { obterCargaDetalhada } from "../utils/cargaDetalhada"
 
 const enderecoContratoCarga = "0xB76e144A9632D5E1Cc8E4A8d42865F11652a490D"
-const abiContratoCarga = [
-    "function obterHistorico(address chaveCaminhao) view returns (uint[])"
-]
+const abiContratoCarga = ["function obterHistorico(address chaveCaminhao) view returns (uint[])"]
 
 const HistoricoCargas = ({ chaveCaminhao }) => {
     const setHistorico = useSetRecoilState(historicoCargasState)
@@ -23,10 +21,8 @@ const HistoricoCargas = ({ chaveCaminhao }) => {
                 const resultado = await contrato.obterHistorico(chaveCaminhao)
                 const ids = resultado.map((id) => Number(id))
 
-                // 🔍 Busca os detalhes de cada carga
-                const cargasDetalhadas = await Promise.all(
-                    ids.map((id) => obterCargaDetalhada(id, caminhoes))
-                )
+                // Busca os detalhes de cada carga
+                const cargasDetalhadas = await Promise.all(ids.map((id) => obterCargaDetalhada(id, caminhoes)))
 
                 setHistorico(cargasDetalhadas)
             } catch (erro) {

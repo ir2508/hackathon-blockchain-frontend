@@ -4,17 +4,10 @@ import { useRecoilState } from "recoil"
 import { entregaSelecionadaState, entregasState } from "../../recoil/entregasAtom"
 import GraficoTemperatura from "../GraficoTemperatura"
 
-    const StatusTexto = styled.h5`
-        color: ${({ status }) =>
-            status === "Finalizada"
-                ? "green"
-                : status === "Rejeitada"
-                ? "red"
-                : status === "Em andamento"
-                ? "orange"
-                : "black"};
-        font-weight: bold;
-    `
+const StatusTexto = styled.span`
+    color: ${({ status }) => (status === "Finalizada" ? "green" : status === "Rejeitada" ? "red" : status === "Em andamento" ? "orange" : "black")};
+    font-weight: bold;
+`
 
 const ItemListaStyled = styled.div`
     display: flex;
@@ -26,6 +19,7 @@ const ItemListaStyled = styled.div`
     border: 1px solid gray;
     border-radius: 5px;
     box-shadow: 1px 1px 1px #ccc;
+    min-width: 1000px;
     &:hover {
         box-shadow: 1px 1px 1px #ccc;
     }
@@ -77,41 +71,35 @@ const ItemListaEntregas = ({ infoEntrega }) => {
         return `${endereco.slice(0, 6)}...${endereco.slice(-4)}`
     }
 
-
     return (
         <ItemListaStyled>
             <div>
-                <h3>
-                    {infoEntrega.placaCaminhao}
-                </h3>
+                <h2>Código da carga: {infoEntrega.id}</h2>
+                <h5>Caminhão: {infoEntrega.placaCaminhao}</h5>
                 <h5> {formatarEndereco(infoEntrega.address)}</h5>
-                <h5>
-                    ID da carga: {infoEntrega.id}
-                </h5>
-                <StatusTexto status={infoEntrega.status}>
-                    Status: {infoEntrega.status}
-                </StatusTexto>
-
+                Status: <StatusTexto status={infoEntrega.status}>{infoEntrega.status}</StatusTexto>
+                <div>
+                    <Botao classBootstrap="btn-outline-success m-2" onClick={handleExibirEntrega}>
+                        Detalhes
+                    </Botao>
+                    {infoEntrega.status !== "Finalizada" ? (
+                        <>
+                            <Botao classBootstrap="btn-outline-success m-2" onClick={handleRegistrarTemperatura}>
+                                Registrar temperatura
+                            </Botao>
+                            <Botao classBootstrap="btn-success m-2" onClick={handleFinalizarEntrega}>
+                                Finalizar entrega
+                            </Botao>
+                        </>
+                    ) : (
+                        ""
+                    )}
+                </div>
             </div>
             <GraficoTemperatura afericoes={infoEntrega.afericoes} id={infoEntrega.id} status={infoEntrega.status} />
-            <div>
-                <Botao classBootstrap="btn-outline-success m-2" onClick={handleExibirEntrega}>
-                    Detalhes
-                </Botao>
-
-                {infoEntrega.status !== "Finalizada" ? (
-                    <>
-                        <Botao classBootstrap="btn-outline-success m-2" onClick={handleRegistrarTemperatura}>
-                            Registrar temperatura
-                        </Botao>
-                        <Botao classBootstrap="btn-success m-2" onClick={handleFinalizarEntrega}>
-                            Finalizar entrega
-                        </Botao>
-                    </>
-                ) : (
-                    ""
-                )}
-            </div>
+            {/* <div>
+               
+            </div> */}
         </ItemListaStyled>
     )
 }

@@ -28,7 +28,7 @@ const CadastrarCaminhao = () => {
     return (
         <ContainerStyled>
             <ConteudoPrincipalStyled>
-                <h2>Página Cadastrar Caminhão</h2>
+                <h2>Cadastrar Caminhão</h2>
                 <FormAddCaminhao />
             </ConteudoPrincipalStyled>
         </ContainerStyled>

@@ -26,7 +26,7 @@ const SectionCargasStyled = styled.section`
 `
 
 const SectionListaEntregasStyled = styled.section`
-    max-height: 90%;
+    max-height: 100%;
     overflow-y: auto;
     scrollbar-color: #444 #fff;
     padding-right: 30px;
@@ -88,7 +88,7 @@ const Monitoramento = () => {
             placaCaminhao: e.target.value,
             detalhesCaminhao: listaCaminhoes.filter((caminhao) => caminhao.placaCaminhao === e.target.value),
         })
-
+        console.log(listaCargas)
     }
 
     // Função chamada pelo ConsultaCaminhoes
@@ -106,7 +106,7 @@ const Monitoramento = () => {
             <SectionCargasStyled>
                 <h2>Monitoramento de entregas</h2>
                 <ConsultaCaminhoes onCaminhoesCarregados={handleCaminhoesCarregados} />
-                <FilterAreaStyled className="mt-5">
+                <FilterAreaStyled className="mt-2">
                     <Select
                         label="Filtrar por Caminhão"
                         type="text"

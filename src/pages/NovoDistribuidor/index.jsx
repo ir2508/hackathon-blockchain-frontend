@@ -93,7 +93,7 @@ const NovoDistribuidor = () => {
 
     return (
         <ContainerPrincipalStyled>
-            <h2>Página Quero ser um distribuidor</h2>
+            <h2>Quero ser um distribuidor</h2>
             <Botao classBootstrap={"btn-success mt-5"} onClick={handleCadastrarDistribuidora}>
                 Cadastrar minha distribuidora
             </Botao>

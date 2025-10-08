@@ -38,12 +38,13 @@ const FormAddEntrega = () => {
 
     return (
         <>
-            <form>
+            <h5 className="text-center">Cadastrar nova entrega</h5>
+            <form className="mt-3">
                 <Select label="Placa do caminhão" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} conteudo={listaPlacas} />
                 {/* <Input label="Placa do caminhão" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} /> */}
                 <Input label="Tipo" type="text" id="tipoEntrega" onChange={handleChange} obrigatorio={true} />
                 <Input label="Status" type="text" id="statusEntrega" obrigatorio={true} value={"Em andamento"} disabled={true} />
-                <Botao classBootstrap="btn-success" onClick={handleAddEntrega}>
+                <Botao classBootstrap="btn-success" largura={"100%"} onClick={handleAddEntrega}>
                     Cadastrar nova entrega
                 </Botao>
             </form>
