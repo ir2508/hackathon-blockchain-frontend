@@ -3,6 +3,14 @@ import Botao from "../Botao"
 import { useRecoilState } from "recoil"
 import { entregaSelecionadaState, entregasState } from "../../recoil/entregasAtom"
 import GraficoTemperatura from "../GraficoTemperatura"
+import { ethers } from "ethers"
+
+const contratoABI = [
+    "function finalizarCarga(uint cargaId) public",
+]
+
+const contratoEndereco = "0x989De45fBE84E2E55E6A1ffC1EC4Fa56093958d7"
+const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const StatusTexto = styled.span`
     color: ${({ status }) => (status === "Finalizada" ? "green" : status === "Rejeitada" ? "red" : status === "Em andamento" ? "orange" : "black")};
@@ -53,9 +61,86 @@ const ItemListaEntregas = ({ infoEntrega }) => {
         })
     }
 
-    const handleFinalizarEntrega = (e) => {
+    const handleFinalizarEntrega = async (e) => {
         e.preventDefault()
-        setListaEntregas((entregasAtuais) => entregasAtuais.map((entrega) => (entrega.id === infoEntrega.id ? { ...entrega, status: "Finalizada" } : entrega)))
+        // alert(infoEntrega.id)
+
+        if (!infoEntrega.id || infoEntrega.id === "") {
+            alert("Entrega inválida ou não informada.")
+            return
+        }
+
+        try {
+            // Verifica se o MetaMask está disponível
+            if (!window.ethereum) {
+                alert("MetaMask não está disponível")
+                return
+            }
+
+            // Verifica se está na rede Passeo
+            const chainIdAtual = await window.ethereum.request({ method: "eth_chainId" })
+
+            if (chainIdAtual !== chainIdPasseo) {
+                try {
+                    await window.ethereum.request({
+                        method: "wallet_switchEthereumChain",
+                        params: [{ chainId: chainIdPasseo }],
+                    })
+                } catch (switchError) {
+                    if (switchError.code === 4902) {
+                        try {
+                            await window.ethereum.request({
+                                method: "wallet_addEthereumChain",
+                                params: [{
+                                    chainId: chainIdPasseo,
+                                    chainName: "Passeo Testnet",
+                                    rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
+                                    nativeCurrency: {
+                                        name: "ETH",
+                                        symbol: "ETH",
+                                        decimals: 18,
+                                    },
+                                    blockExplorerUrls: ["https://explorer.passeo.io"],
+                                }],
+                            })
+                        } catch (addError) {
+                            alert("Erro ao adicionar a rede Passeo ao MetaMask.")
+                            return
+                        }
+                    } else {
+                        alert("Troca de rede recusada. Conecte à rede Passeo para continuar.")
+                        return
+                    }
+                }
+            }
+
+            // Solicita conexão com a carteira
+            await window.ethereum.request({ method: "eth_requestAccounts" })
+
+            // Cria provider e signer
+            const provider = new ethers.BrowserProvider(window.ethereum)
+            const signer = await provider.getSigner()
+
+            // Instancia o contrato
+            const contrato = new ethers.Contract(contratoEndereco, contratoABI, signer)
+
+            // Chama a função do contrato com a placa
+            const tx = await contrato.finalizarCarga( infoEntrega.id )
+            await tx.wait()
+
+        } catch (error) {
+            console.error("Erro ao aferir temperatura:", error)
+
+            // Tenta extrair a razão do revert
+            if (error.reason) {
+                alert(`Erro ao aferir temperatura: ${error.reason}`)
+            } else if (error.message) {
+                alert(`Erro ao aferir temperatura: ${error.message}`)
+            } else {
+                alert("Erro ao aferir temperatura. Veja o console para mais detalhes.")
+            }
+        }
+        
     }
 
     const handleExibirEntrega = (e) => {
@@ -82,7 +167,7 @@ const ItemListaEntregas = ({ infoEntrega }) => {
                     <Botao classBootstrap="btn-outline-success m-2" onClick={handleExibirEntrega}>
                         Detalhes
                     </Botao>
-                    {infoEntrega.status !== "Finalizada" ? (
+                    {(infoEntrega.status !== "Finalizada" && infoEntrega.status !== "Rejeitada") ? (
                         <>
                             <Botao classBootstrap="btn-outline-success m-2" onClick={handleRegistrarTemperatura}>
                                 Registrar temperatura
