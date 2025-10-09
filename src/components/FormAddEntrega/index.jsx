@@ -2,7 +2,7 @@ import { useRecoilState } from "recoil"
 import Botao from "../Botao"
 import { useState } from "react"
 import { placasCaminhoesState, caminhoesState } from '../../recoil/caminhoesAtom';
-import Select from '../Select';
+import SelectPersonalizado from '../SelectPersonalizado';
 import { ethers } from "ethers"
 
 const contratoABI = [
@@ -13,15 +13,24 @@ const contratoEndereco = "0x989De45fBE84E2E55E6A1ffC1EC4Fa56093958d7"
 const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const FormAddEntrega = () => {
-    // const [listaEntregas, setListaEntregas] = useRecoilState(entregasState)
-    const [listaPlacas] = useRecoilState(placasCaminhoesState)
+
+    const formatarEndereco = (endereco) => {
+        if (!endereco || endereco.length < 10) return endereco
+        return `${endereco.slice(0, 6)}...${endereco.slice(-4)}`
+    }
+
     const [listaCaminhoes] = useRecoilState(caminhoesState)
+
+    const listaPersonalizada = listaCaminhoes.map(item => ({
+        value: item.endereco,
+        label: `${item.placaCaminhao} - ${formatarEndereco(item.endereco)}`
+    }))
 
 
     const [endereco, setNovaEntrega] = useState("")
 
     const handleChange = (e) => {
-        setNovaEntrega(listaCaminhoes.filter((caminhao) => caminhao.placaCaminhao === e.target.value)[0]?.endereco)
+        setNovaEntrega(e.target.value)
     }
 
     const handleAddEntrega = async (e) => {
@@ -108,7 +117,7 @@ const FormAddEntrega = () => {
         <>
             <h5 className="text-center">Cadastrar nova entrega</h5>
             <form className="mt-3">
-                <Select label="Placa do caminhão" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} conteudo={listaPlacas} />
+                <SelectPersonalizado label="Placa do caminhão" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} conteudo={listaPersonalizada} />
                 <Botao classBootstrap="btn-success" largura={"100%"} onClick={handleAddEntrega}>
                     Cadastrar nova entrega
                 </Botao>

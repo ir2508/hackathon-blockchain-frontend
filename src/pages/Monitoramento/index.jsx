@@ -5,7 +5,7 @@ import HistoricoCargas from "../../components/HistoricoCargas"
 import ItemListaEntregas from "../../components/ItemListaEntregas"
 // import { useRecoilState } from "recoil"
 import { entregaSelecionadaState, entregasFiltradasState, entregasState } from "../../recoil/entregasAtom"
-import Select from "../../components/Select"
+import SelectPersonalizado from "../../components/SelectPersonalizado"
 import Botao from "../../components/Botao"
 import { caminhaoSelecionadoState, caminhoesState, placasCaminhoesState } from "../../recoil/caminhoesAtom"
 
@@ -45,6 +45,12 @@ const FilterAreaStyled = styled.section`
 `
 
 const Monitoramento = () => {
+
+    const formatarEndereco = (endereco) => {
+        if (!endereco || endereco.length < 10) return endereco
+        return `${endereco.slice(0, 6)}...${endereco.slice(-4)}`
+    }
+
     const [listaEntregas, setListaEntregas] = useRecoilState(entregasState)
     const [listaEntregasFiltradas, setEntregasFiltradas] = useRecoilState(entregasFiltradasState)
     const [listaCaminhoes] = useRecoilState(caminhoesState)
@@ -52,13 +58,18 @@ const Monitoramento = () => {
     const [caminhaoSelecionado, setCaminhaoSelecionado] = useRecoilState(caminhaoSelecionadoState)
     const [listaPlacas] = useRecoilState(placasCaminhoesState)
 
+    const listaPersonalizada = listaCaminhoes.map(item => ({
+        value: item.placaCaminhao,
+        label: `${item.placaCaminhao} - ${formatarEndereco(item.endereco)}`
+    }))
+
+
+
     const setCaminhoes = useSetRecoilState(caminhoesState)
 
-    // Pega o endereço do caminhão selecionado
     const enderecoCaminhaoSelecionado = caminhaoSelecionado?.detalhesCaminhao?.[0]?.endereco
-    // Busca as cargas do caminhão selecionado (retorna array de ids)
-    // const listaCargas = HistoricoCargas({ chaveCaminhao: enderecoCaminhaoSelecionado })
     const listaCargas = useRecoilValue(historicoCargasState)
+    const setListaCargas = useSetRecoilState(historicoCargasState)
 
     const handleAddCaminhao = (e) => {
         e.preventDefault()
@@ -80,9 +91,21 @@ const Monitoramento = () => {
 
     const handleCaminhaoSelecionado = (e) => {
         e.preventDefault()
+            if (!e.target.value || e.target.value === "") {
+            setCaminhaoSelecionado({
+                placaCaminhao: "",
+                detalhesCaminhao: {},
+            })
+            setListaCargas([]) // agora sim: limpa o estado
+            return
+        }
+
+        const placaSelecionada = e.target.value
+        const detalhes = listaCaminhoes.filter((caminhao) => caminhao.placaCaminhao === placaSelecionada)
+
         setCaminhaoSelecionado({
-            placaCaminhao: e.target.value,
-            detalhesCaminhao: listaCaminhoes.filter((caminhao) => caminhao.placaCaminhao === e.target.value),
+            placaCaminhao: placaSelecionada,
+            detalhesCaminhao: detalhes,
         })
     }
 
@@ -102,7 +125,7 @@ const Monitoramento = () => {
                 <h2>Monitoramento de entregas</h2>
                 <ConsultaCaminhoes onCaminhoesCarregados={handleCaminhoesCarregados} />
                 <FilterAreaStyled className="mt-2">
-                    <Select label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} onChange={handleCaminhaoSelecionado} conteudo={listaPlacas} />
+                    <SelectPersonalizado label="Filtrar por Caminhão" type="text" id="caminhoes" obrigatorio={true} onChange={handleCaminhaoSelecionado} conteudo={listaPersonalizada} />
                     <p>
                         <Botao classBootstrap={"btn-outline-secondary"} onClick={handleAddEntrega}>
                             Adicionar Entrega
