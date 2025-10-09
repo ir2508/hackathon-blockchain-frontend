@@ -1,10 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
 import { useRecoilState } from "recoil"
 import Botao from "../Botao"
-import Input from "../Input"
-import { entregasState } from "../../recoil/entregasAtom"
 import { useState } from "react"
-import { placasCaminhoesState } from '../../recoil/caminhoesAtom';
+import { placasCaminhoesState, caminhoesState } from '../../recoil/caminhoesAtom';
 import Select from '../Select';
 import { ethers } from "ethers"
 
@@ -18,12 +15,13 @@ const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 const FormAddEntrega = () => {
     // const [listaEntregas, setListaEntregas] = useRecoilState(entregasState)
     const [listaPlacas] = useRecoilState(placasCaminhoesState)
+    const [listaCaminhoes] = useRecoilState(caminhoesState)
 
 
     const [endereco, setNovaEntrega] = useState("")
 
     const handleChange = (e) => {
-        setNovaEntrega(e.target.value)
+        setNovaEntrega(listaCaminhoes.filter((caminhao) => caminhao.placaCaminhao === e.target.value)[0]?.endereco)
     }
 
     const handleAddEntrega = async (e) => {
@@ -110,11 +108,7 @@ const FormAddEntrega = () => {
         <>
             <h5 className="text-center">Cadastrar nova entrega</h5>
             <form className="mt-3">
-                {/* <Select label="Placa do caminhão" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} conteudo={listaPlacas} /> */}
-                <Input label="Chave Publica" type="text" id="chaveCaminhao" onChange={handleChange} obrigatorio={true} />
-                {/* <Input label="Placa do caminhão" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} /> */}
-                {/* <Input label="Tipo" type="text" id="tipoEntrega" onChange={handleChange} obrigatorio={true} /> */}
-                {/* <Input label="Status" type="text" id="statusEntrega" obrigatorio={true} value={"Em andamento"} disabled={true} /> */}
+                <Select label="Placa do caminhão" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} conteudo={listaPlacas} />
                 <Botao classBootstrap="btn-success" largura={"100%"} onClick={handleAddEntrega}>
                     Cadastrar nova entrega
                 </Botao>

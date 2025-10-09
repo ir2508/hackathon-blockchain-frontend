@@ -84,7 +84,6 @@ const Monitoramento = () => {
             placaCaminhao: e.target.value,
             detalhesCaminhao: listaCaminhoes.filter((caminhao) => caminhao.placaCaminhao === e.target.value),
         })
-        console.log(listaCargas)
     }
 
     // Função chamada pelo ConsultaCaminhoes
