@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react"
 import Botao from "../Botao"
 import Input from "../Input"
+import { ethers } from "ethers"
+
+const contratoABI = [
+    "function adicionarAfericao(uint cargaId, int temperaturaDecimosCelsius) public",
+]
+
+const contratoEndereco = "0x989De45fBE84E2E55E6A1ffC1EC4Fa56093958d7"
+const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const FormTemperatura = ({ carga }) => {
     const [idEntrega, setIdEntrega] = useState(carga.idEntrega)
@@ -22,15 +30,88 @@ const FormTemperatura = ({ carga }) => {
         })
     }
 
-    const handleAferirTemperatura = (e) => {
+    const handleAferirTemperatura = async (e) => {
         e.preventDefault()
-        const timestampAtual = Math.floor(Date.now() / 1000)
         setAfericao({
             ...afericao,
-            idEntrega: idEntrega,
-            timestamp: timestampAtual,
+            idEntrega: idEntrega
         })
-        console.log(afericao)
+
+        if (!afericao.temperatura || afericao.temperatura === "") {
+            alert("Endereço inválida ou não informada.")
+            return
+        }
+
+        try {
+            // Verifica se o MetaMask está disponível
+            if (!window.ethereum) {
+                alert("MetaMask não está disponível")
+                return
+            }
+
+            // Verifica se está na rede Passeo
+            const chainIdAtual = await window.ethereum.request({ method: "eth_chainId" })
+
+            if (chainIdAtual !== chainIdPasseo) {
+                try {
+                    await window.ethereum.request({
+                        method: "wallet_switchEthereumChain",
+                        params: [{ chainId: chainIdPasseo }],
+                    })
+                } catch (switchError) {
+                    if (switchError.code === 4902) {
+                        try {
+                            await window.ethereum.request({
+                                method: "wallet_addEthereumChain",
+                                params: [{
+                                    chainId: chainIdPasseo,
+                                    chainName: "Passeo Testnet",
+                                    rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
+                                    nativeCurrency: {
+                                        name: "ETH",
+                                        symbol: "ETH",
+                                        decimals: 18,
+                                    },
+                                    blockExplorerUrls: ["https://explorer.passeo.io"],
+                                }],
+                            })
+                        } catch (addError) {
+                            alert("Erro ao adicionar a rede Passeo ao MetaMask.")
+                            return
+                        }
+                    } else {
+                        alert("Troca de rede recusada. Conecte à rede Passeo para continuar.")
+                        return
+                    }
+                }
+            }
+
+            // Solicita conexão com a carteira
+            await window.ethereum.request({ method: "eth_requestAccounts" })
+
+            // Cria provider e signer
+            const provider = new ethers.BrowserProvider(window.ethereum)
+            const signer = await provider.getSigner()
+
+            // Instancia o contrato
+            const contrato = new ethers.Contract(contratoEndereco, contratoABI, signer)
+
+            // Chama a função do contrato com a placa
+            const tx = await contrato.adicionarAfericao( afericao.idEntrega , afericao.temperatura)
+            await tx.wait()
+
+        } catch (error) {
+            console.error("Erro ao aferir temperatura:", error)
+
+            // Tenta extrair a razão do revert
+            if (error.reason) {
+                alert(`Erro ao aferir temperatura: ${error.reason}`)
+            } else if (error.message) {
+                alert(`Erro ao aferir temperatura: ${error.message}`)
+            } else {
+                alert("Erro ao aferir temperatura. Veja o console para mais detalhes.")
+            }
+        }
     }
 
     return (
