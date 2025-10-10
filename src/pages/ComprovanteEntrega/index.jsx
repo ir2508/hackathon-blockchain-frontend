@@ -58,7 +58,7 @@ const ComprovanteEntrega = () => {
         <DetalhesComprovanteStyled>
             <StatusSectionStyled>
                 <IconStyled className="bi bi-check-circle-fill"></IconStyled>
-                <h2>Entrega finalizada - </h2>
+                <h2>Entrega finalizada</h2>
             </StatusSectionStyled>
             <DetalhesEntregaStyled>
                 <h4>Entrega iniciada</h4>
