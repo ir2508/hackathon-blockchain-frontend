@@ -3,12 +3,8 @@ import Botao from "../../components/Botao"
 import { ethers } from "ethers"
 import { useState } from "react"
 
-// ABI do contrato
 const contratoABI = ["function registrarComoAdministradora() public"]
-
-// Endereço do contrato na blockchain
 const contratoEndereco = "0xAFB1F3b374eb69daf945cEAe9315CB269aaA7411"
-
 const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const ContainerPrincipalStyled = styled.div`
@@ -24,31 +20,28 @@ const NovoDistribuidor = () => {
 
     const handleCadastrarDistribuidora = async (e) => {
         e.preventDefault()
-
-        console.log("Abriu")
+        setMetamaskInfo({
+            mensagemRetorno: "Aguardando ação do usuário ...",
+        })
 
         try {
-            // Verifica se o MetaMask está disponível
             if (!window.ethereum) {
                 setMetamaskInfo({
-                    ...metamaskInfo,
                     mensagemRetorno: "MetaMask não está disponível",
                 })
                 return
             }
 
-            // Verifica se está na rede Passeo
+            // Verifica se já está na rede Paseo
             const chainIdAtual = await window.ethereum.request({ method: "eth_chainId" })
 
             if (chainIdAtual !== chainIdPasseo) {
                 try {
-                    // Tenta trocar para a rede Passeo
                     await window.ethereum.request({
                         method: "wallet_switchEthereumChain",
                         params: [{ chainId: chainIdPasseo }],
                     })
                 } catch (switchError) {
-                    // Se a rede não estiver adicionada, tenta adicionar
                     if (switchError.code === 4902) {
                         try {
                             await window.ethereum.request({
@@ -67,25 +60,30 @@ const NovoDistribuidor = () => {
                                     },
                                 ],
                             })
-                        } catch (addError) {
-                            setMetamaskInfo({
-                                ...metamaskInfo,
-                                mensagemRetorno: "Erro ao adicionar a rede Passeo ao MetaMask",
+
+                            // Após adicionar, tenta trocar para ela
+                            await window.ethereum.request({
+                                method: "wallet_switchEthereumChain",
+                                params: [{ chainId: chainIdPasseo }],
                             })
+                        } catch (addError) {
+                            handleError(addError, "Erro ao adicionar a rede Paseo ao MetaMask")
                             return
                         }
                     } else {
-                        setMetamaskInfo({
-                            ...metamaskInfo,
-                            mensagemRetorno: "Troca de rede recusada. Conecte à rede Passeo para continuar",
-                        })
+                        handleError(switchError, "Troca de rede recusada. Conecte à rede Paseo para continuar")
                         return
                     }
                 }
             }
 
             // Solicita conexão com a carteira
-            await window.ethereum.request({ method: "eth_requestAccounts" })
+            try {
+                await window.ethereum.request({ method: "eth_requestAccounts" })
+            } catch (connectError) {
+                handleError(connectError, "Conexão com a carteira foi recusada")
+                return
+            }
 
             // Cria provider e signer
             const provider = new ethers.BrowserProvider(window.ethereum)
@@ -95,46 +93,56 @@ const NovoDistribuidor = () => {
             const contrato = new ethers.Contract(contratoEndereco, contratoABI, signer)
 
             // Chama a função do contrato
-            const tx = await contrato.registrarComoAdministradora()
-
-            // Aguarda confirmação da transação
-            await tx.wait()
-        } catch (error) {
-
-            let message = ""
-            if (error.reason) {
-                message = error.reason
-            } else if (error.message) {
-                message = error.message
-            } else {
-                message= "Erro ao adicionar Distribuidor. Veja o console para mais detalhes."
+            try {
+                const tx = await contrato.registrarComoAdministradora()
+                await tx.wait()
+                setMetamaskInfo({
+                    mensagemRetorno: "Distribuidora registrada com sucesso!",
+                })
+            } catch (txError) {
+                handleError(txError, "Erro ao registrar distribuidora")
             }
-            setMetamaskInfo({
-                ...metamaskInfo,
-                mensagemRetorno: message,
-            })
+        } catch (error) {
+            handleError(error, "Erro inesperado")
         }
+    }
+
+    const handleError = (error, fallbackMessage) => {
+        let message = fallbackMessage
+        if (error.code === 4001) {
+            message = "Solicitação rejeitada pelo usuário."
+        } else if (error.reason) {
+            message = error.reason
+        } else if (error.message) {
+            message = error.message
+        }
+        setMetamaskInfo({ mensagemRetorno: message })
+        console.error("Erro MetaMask:", error)
     }
 
     return (
         <ContainerPrincipalStyled>
             <h2>Quero ser um distribuidor</h2>
-            <button type="button" class="btn btn-success mt-5" onClick={handleCadastrarDistribuidora} data-bs-toggle="modal" data-bs-target="#loginMetamask">
+            <button
+                type="button"
+                className="btn btn-success mt-5"
+                onClick={handleCadastrarDistribuidora}
+                data-bs-toggle="modal"
+                data-bs-target="#loginMetamask"
+            >
                 Cadastrar minha distribuidora
             </button>
 
-            <div class="modal fade" id="loginMetamask" tabindex="-1" aria-labelledby="loginMetamaskLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="loginMetamaskLabel">
-                                Informações de conexão metamask
+            <div className="modal fade" id="loginMetamask" tabIndex="-1" aria-labelledby="loginMetamaskLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="loginMetamaskLabel">
+                                Informações de conexão MetaMask
                             </h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            {/* <h5>{metamaskInfo.mensagemRetorno}</h5> */}
-
+                        <div className="modal-body">
                             <ul>
                                 <li>
                                     Mensagem:
@@ -143,8 +151,6 @@ const NovoDistribuidor = () => {
                                     </ul>
                                 </li>
                             </ul>
-
-                            <h5></h5>
                         </div>
                     </div>
                 </div>
