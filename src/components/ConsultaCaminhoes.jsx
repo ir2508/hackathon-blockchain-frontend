@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { ethers } from "ethers"
 
-const enderecoContrato = "0xb3Ed3706Be50d1724586DBA0d5bDDaC07c8d53Bb"
+const enderecoContrato = "0xeAB24340984F926d0B1a6C97309AD2d8B3a26cEe"
 const abiContrato = ["function obterCaminhoes() view returns (address[])", "function placas(address) view returns (string)"]
 
 const ConsultaCaminhoes = ({ onCaminhoesCarregados }) => {

@@ -10,7 +10,7 @@ const contratoABI = [
     "function cadastrarMeuCaminhao(string placa) public",
 ]
 
-const contratoEndereco = "0xb3Ed3706Be50d1724586DBA0d5bDDaC07c8d53Bb"
+const contratoEndereco = "0xeAB24340984F926d0B1a6C97309AD2d8B3a26cEe"
 const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const FormAddCaminhao = () => {

@@ -8,7 +8,7 @@ const contratoABI = [
 ]
 
 // Endereço do contrato na blockchain 
-const contratoEndereco = "0xd85bEabBd33A67132edA237B84ee86BE78866b79"
+const contratoEndereco = "0xAFB1F3b374eb69daf945cEAe9315CB269aaA7411"
 
 const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
