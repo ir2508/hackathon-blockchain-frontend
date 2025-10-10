@@ -7,7 +7,7 @@ const contratoABI = [
     "function adicionarAfericao(uint cargaId, int temperaturaDecimosCelsius) public",
 ]
 
-const contratoEndereco = "0x989De45fBE84E2E55E6A1ffC1EC4Fa56093958d7"
+const contratoEndereco = "0x7290668053c1f1467F93d63561571e1Be3cBeA9A"
 const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const FormTemperatura = ({ carga }) => {

@@ -9,7 +9,7 @@ const contratoABI = [
     "function cadastrarCarga(address chaveCaminhao) public",
 ]
 
-const contratoEndereco = "0x989De45fBE84E2E55E6A1ffC1EC4Fa56093958d7"
+const contratoEndereco = "0x8965c031D70e7aE4e7d33554374d1c655d87E8f2"
 const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const FormAddEntrega = () => {

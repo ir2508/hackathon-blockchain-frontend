@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import { format } from "date-fns"
 
-const enderecoContratoCarnes = "0x42F904182B6653e7f910419b740D5eA84e94888f"
+const enderecoContratoCarnesBase = "0x42F904182B6653e7f910419b740D5eA84e94888f"
 const abiContratoCarnes = ["function obterCarga(uint cargaId) view returns (uint, address, uint8)", "function obterAfericoes(uint cargaId) view returns (tuple(int temperaturaDecimosCelsius, uint timestamp)[])"]
 
 const CargaDetalhada = ({ cargaId }) => {
@@ -12,7 +12,7 @@ const CargaDetalhada = ({ cargaId }) => {
     const consultarDetalhes = async () => {
         try {
             const provider = new ethers.JsonRpcProvider("https://testnet-passet-hub-eth-rpc.polkadot.io")
-            const contrato = new ethers.Contract(enderecoContratoCarnes, abiContratoCarnes, provider)
+            const contrato = new ethers.Contract(enderecoContratoCarnesBase, abiContratoCarnes, provider)
 
             const [, , statusRaw] = await contrato.obterCarga(cargaId)
             const afericoesResultado = await contrato.obterAfericoes(cargaId)
