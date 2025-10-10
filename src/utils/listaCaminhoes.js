@@ -13,10 +13,11 @@ async function getCaminhoes() {
 
         const placas = await Promise.all(
             enderecos.map(async (endereco) => {
-                const placa = await contrato.placas(endereco)
-                return { endereco, placa }
+                const placaCaminhao = await contrato.placas(endereco)
+                return { endereco, placaCaminhao }
             })
         )
+        return placas
     } catch (erro) {
         console.error("Erro ao consultar caminhões:", erro)
     }

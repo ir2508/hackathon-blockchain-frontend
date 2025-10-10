@@ -6,8 +6,10 @@ import { useRecoilValue } from "recoil"
 import { historicoCargasState } from "../../recoil/entregasAtom"
 import { caminhoesState } from "../../recoil/caminhoesAtom"
 
-import listaCaminhoes from "../../utils/listaCaminhoes" // Importa o objeto com a função
+import listaCaminhoes from "../../utils/listaCaminhoes"
+import { obterCargaDetalhada } from "../../utils/cargaDetalhada"
 import { useEffect } from "react"
+import { useState } from "react"
 
 const DetalhesComprovanteStyled = styled.div`
     width: 100vw;
@@ -38,42 +40,89 @@ const DetalhesEntregaStyled = styled.section`
 `
 const ComprovanteEntrega = () => {
     const { idEntrega } = useParams()
+    const [infoEntrega, setInfoEntrega] = useState(null)
 
     useEffect(() => {
-        async function fetchAddress() {
-            const address = await listaCaminhoes.getCaminhoes()
+        async function fetchData() {
+            try {
+                const caminhoes = await listaCaminhoes.getCaminhoes()
+                const cargaId = Number(idEntrega) // <- conversão correta aqui
+                const cargaDetalhe = await obterCargaDetalhada(cargaId, caminhoes)
+                setInfoEntrega(cargaDetalhe)
+            } catch (error) {
+                console.error("Erro ao buscar dados:", error)
+            }
         }
 
-        fetchAddress()
-    }, [])
-
-    const caminhoes = useRecoilValue(caminhoesState)
-    console.log(caminhoes)
-
-    // const listaCargas = useRecoilValue(historicoCargasState)
-    // console.log(listaCargas)
-    // const cargaFiltrada = listaCargas.filter((carga) => carga.id === idEntrega)
+        fetchData()
+    }, [idEntrega])
 
     return (
         <DetalhesComprovanteStyled>
-            <StatusSectionStyled>
-                <IconStyled className="bi bi-check-circle-fill"></IconStyled>
-                <h2>Entrega finalizada</h2>
-            </StatusSectionStyled>
+            
+            <IconStyled
+                className={
+                    infoEntrega?.status === "Em andamento"
+                        ? "bi bi-hourglass-split"
+                        : infoEntrega?.status === "Finalizada"
+                        ? "bi bi-check-circle-fill"
+                        : infoEntrega?.status === "Rejeitada"
+                        ? "bi bi-x-circle-fill"
+                        : "bi bi-question-circle-fill"
+                }
+                style={{
+                    color:
+                        infoEntrega?.status === "Em andamento"
+                            ? "orange"
+                            : infoEntrega?.status === "Finalizada"
+                            ? "green"
+                            : infoEntrega?.status === "Rejeitada"
+                            ? "red"
+                            : "gray",
+                }}
+            />
+
             <DetalhesEntregaStyled>
                 <h4>Entrega iniciada</h4>
-                <span>09h00 - 10/10/2025</span>
+                <span>
+                    { infoEntrega?.dataInicio ? infoEntrega.dataInicio.toLocaleString("pt-BR") : "Carregando..."}
+                </span>
 
                 <h4 className="mt-3">Entrega finalizada</h4>
-                <span>09h00 - 10/10/2025</span>
+                <span>
+                    { infoEntrega?.dataFim ? infoEntrega.dataFim.toLocaleString("pt-BR") : "Carregando..."}
+                </span>
 
                 <h4 className="mt-3">Placa do caminhão</h4>
-                <span>ABC-1D23</span>
+                <span> {infoEntrega?.placaCaminhao || "Não disponível"} </span>
+
+                <h4 className="mt-3">Address</h4>
+                <span> {infoEntrega?.address || "Não disponível"} </span>
 
                 <h4 className="mt-3">Histórico Temperatura</h4>
-                <span>ABC-1D23</span>
+                <span>
+                    { 
+                        infoEntrega?.afericoes?.length > 0 ? (
+                            <ul>
+                                {infoEntrega.afericoes.map((afericao, index) => (
+                                    <li key={index}>
+                                        {afericao.temperatura}°C às{" "}
+                                        {new Date(afericao.timestamp * 1000).toLocaleString("pt-BR")}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <span>Sem aferições registradas</span>
+                        )
+                    }
+                </span>
+                {
+                    infoEntrega?.afericoes?.length > 0 && (
+                        <GraficoTemperatura afericoes={infoEntrega.afericoes} id={infoEntrega.id} status={infoEntrega.status} />
+                    )
+                }
+
             </DetalhesEntregaStyled>
-            {/* <GraficoTemperatura afericoes={infoEntrega.afericoes} id={infoEntrega.id} status={infoEntrega.status} /> */}
 
             <Botao classBootstrap={"btn-outline-success mb-3"} largura={"100%"}>
                 Marcar como recebido

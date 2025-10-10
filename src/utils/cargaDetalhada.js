@@ -12,7 +12,6 @@ const abiContratoAfericao = [
 ]
 
 const statusTexto = (s) => {
-    console.log(s)
     switch (s) {
         case 0:
             return "Em andamento"
