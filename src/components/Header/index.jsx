@@ -1,5 +1,7 @@
+import React, { useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import styled from "styled-components"
+import walletAddressLogada from "../../utils/walletAddressLogada" // Importa o objeto com a função
 
 const HeaderStyled = styled.header`
     display: flex;
@@ -7,8 +9,6 @@ const HeaderStyled = styled.header`
     align-items: center;
     background-color: #F0F1F2;
     box-shadow: 2px 2px 5px #ccc;
-
-    /* box-sizing: border-box; */
     width: 100vw;
     max-height: 150px;
     padding: 25px 80px;
@@ -24,6 +24,17 @@ const MenuNavegacao = styled.nav`
 `
 
 const Header = () => {
+    const [walletAddress, setWalletAddress] = useState("")
+
+    useEffect(() => {
+        async function fetchAddress() {
+            const address = await walletAddressLogada.getWalletAddress()
+            setWalletAddress(address)
+        }
+
+        fetchAddress()
+    }, [])
+
     return (
         <HeaderStyled>
             <h1>Logichain</h1>
@@ -33,8 +44,7 @@ const Header = () => {
                 <NavLink to={"/seja-distribuidor"}>Quero ser um distribuidor</NavLink>
             </MenuNavegacao>
             <div>
-                Teste
-                {/* Retorno da chave pública */}
+                Endereço conectado: {walletAddress || "Não conectado"}
             </div>
         </HeaderStyled>
     )
