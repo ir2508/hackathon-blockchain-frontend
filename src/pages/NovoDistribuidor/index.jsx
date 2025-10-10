@@ -1,13 +1,12 @@
 import styled from "styled-components"
 import Botao from "../../components/Botao"
 import { ethers } from "ethers"
+import { useState } from "react"
 
 // ABI do contrato
-const contratoABI = [
-    "function registrarComoAdministradora() public",
-]
+const contratoABI = ["function registrarComoAdministradora() public"]
 
-// Endereço do contrato na blockchain 
+// Endereço do contrato na blockchain
 const contratoEndereco = "0xAFB1F3b374eb69daf945cEAe9315CB269aaA7411"
 
 const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
@@ -19,14 +18,23 @@ const ContainerPrincipalStyled = styled.div`
 `
 
 const NovoDistribuidor = () => {
+    const [metamaskInfo, setMetamaskInfo] = useState({
+        chavePublica: "0x06A85356DCb5b307096726FB86A78c59D38e08ee",
+        mensagemRetorno: "",
+    })
 
     const handleCadastrarDistribuidora = async (e) => {
         e.preventDefault()
 
+        console.log("Abriu")
+
         try {
             // Verifica se o MetaMask está disponível
             if (!window.ethereum) {
-                alert("MetaMask não está disponível")
+                setMetamaskInfo({
+                    ...metamaskInfo,
+                    mensagemRetorno: "MetaMask não está disponível",
+                })
                 return
             }
 
@@ -46,24 +54,32 @@ const NovoDistribuidor = () => {
                         try {
                             await window.ethereum.request({
                                 method: "wallet_addEthereumChain",
-                                params: [{
-                                    chainId: chainIdPasseo,
-                                    chainName: "Passeo Testnet",
-                                    rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
-                                    nativeCurrency: {
-                                        name: "ETH",
-                                        symbol: "ETH",
-                                        decimals: 18,
+                                params: [
+                                    {
+                                        chainId: chainIdPasseo,
+                                        chainName: "Passeo Testnet",
+                                        rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
+                                        nativeCurrency: {
+                                            name: "ETH",
+                                            symbol: "ETH",
+                                            decimals: 18,
+                                        },
+                                        blockExplorerUrls: ["https://explorer.passeo.io"],
                                     },
-                                    blockExplorerUrls: ["https://explorer.passeo.io"],
-                                }],
+                                ],
                             })
                         } catch (addError) {
-                            alert("Erro ao adicionar a rede Passeo ao MetaMask.")
+                            setMetamaskInfo({
+                                ...metamaskInfo,
+                                mensagemRetorno: "Erro ao adicionar a rede Passeo ao MetaMask",
+                            })
                             return
                         }
                     } else {
-                        alert("Troca de rede recusada. Conecte à rede Passeo para continuar.")
+                        setMetamaskInfo({
+                            ...metamaskInfo,
+                            mensagemRetorno: "Troca de rede recusada. Conecte à rede Passeo para continuar",
+                        })
                         return
                     }
                 }
@@ -84,19 +100,56 @@ const NovoDistribuidor = () => {
 
             // Aguarda confirmação da transação
             await tx.wait()
-
         } catch (error) {
             console.error("Erro ao registrar distribuidora:", error)
-            alert("Erro ao registrar distribuidora. Veja o console para mais detalhes.")
+            setMetamaskInfo({
+                ...metamaskInfo,
+                mensagemRetorno: "Erro ao registrar distribuidora. Veja o console para mais detalhes",
+            })
         }
     }
 
     return (
         <ContainerPrincipalStyled>
             <h2>Quero ser um distribuidor</h2>
-            <Botao classBootstrap={"btn-success mt-5"} onClick={handleCadastrarDistribuidora}>
+            <button type="button" class="btn btn-success mt-5" onClick={handleCadastrarDistribuidora} data-bs-toggle="modal" data-bs-target="#loginMetamask">
                 Cadastrar minha distribuidora
-            </Botao>
+            </button>
+
+            <div class="modal fade" id="loginMetamask" tabindex="-1" aria-labelledby="loginMetamaskLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="loginMetamaskLabel">
+                                Informações de conexão metamask
+                            </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {/* <h5>{metamaskInfo.mensagemRetorno}</h5> */}
+
+                            <ul>
+                                <li>
+                                    Mensagem:
+                                    <ul>
+                                        <li>{metamaskInfo.mensagemRetorno}</li>
+                                    </ul>
+                                </li>
+                                {metamaskInfo.chavePublica && (
+                                    <li>
+                                        Chave pública:
+                                        <ul>
+                                            <li>{metamaskInfo.chavePublica}</li>
+                                        </ul>
+                                    </li>
+                                )}
+                            </ul>
+
+                            <h5></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </ContainerPrincipalStyled>
     )
 }

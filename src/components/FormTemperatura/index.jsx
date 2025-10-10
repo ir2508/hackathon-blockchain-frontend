@@ -3,9 +3,7 @@ import Botao from "../Botao"
 import Input from "../Input"
 import { ethers } from "ethers"
 
-const contratoABI = [
-    "function adicionarAfericao(uint cargaId, int temperaturaDecimosCelsius) public",
-]
+const contratoABI = ["function adicionarAfericao(uint cargaId, int temperaturaDecimosCelsius) public"]
 
 const contratoEndereco = "0x7290668053c1f1467F93d63561571e1Be3cBeA9A"
 const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
@@ -34,7 +32,7 @@ const FormTemperatura = ({ carga }) => {
         e.preventDefault()
         setAfericao({
             ...afericao,
-            idEntrega: idEntrega
+            idEntrega: idEntrega,
         })
 
         if (!afericao.temperatura || afericao.temperatura === "") {
@@ -63,17 +61,19 @@ const FormTemperatura = ({ carga }) => {
                         try {
                             await window.ethereum.request({
                                 method: "wallet_addEthereumChain",
-                                params: [{
-                                    chainId: chainIdPasseo,
-                                    chainName: "Passeo Testnet",
-                                    rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
-                                    nativeCurrency: {
-                                        name: "ETH",
-                                        symbol: "ETH",
-                                        decimals: 18,
+                                params: [
+                                    {
+                                        chainId: chainIdPasseo,
+                                        chainName: "Passeo Testnet",
+                                        rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
+                                        nativeCurrency: {
+                                            name: "ETH",
+                                            symbol: "ETH",
+                                            decimals: 18,
+                                        },
+                                        blockExplorerUrls: ["https://explorer.passeo.io"],
                                     },
-                                    blockExplorerUrls: ["https://explorer.passeo.io"],
-                                }],
+                                ],
                             })
                         } catch (addError) {
                             alert("Erro ao adicionar a rede Passeo ao MetaMask.")
@@ -97,9 +97,8 @@ const FormTemperatura = ({ carga }) => {
             const contrato = new ethers.Contract(contratoEndereco, contratoABI, signer)
 
             // Chama a função do contrato com a placa
-            const tx = await contrato.adicionarAfericao( afericao.idEntrega , afericao.temperatura)
+            const tx = await contrato.adicionarAfericao(afericao.idEntrega, afericao.temperatura)
             await tx.wait()
-
         } catch (error) {
             console.error("Erro ao aferir temperatura:", error)
 
@@ -117,6 +116,9 @@ const FormTemperatura = ({ carga }) => {
     return (
         <>
             <h5 className="text-center">Registrar temperatura</h5>
+            <div class="alert alert-warning" role="alert">
+                Esse formulário é temporário usado apenas para simular a ação do sensor IoT
+            </div>
             <form className="mt-3">
                 <Input label="ID da carga" type="text" id="idEntrega" obrigatorio={true} value={carga.idEntrega} onChange={handleChange} disabled={true} />
                 <Input label="Temperatura Celsius" type="number" id="temperatura" obrigatorio={true} onChange={handleChange} />
