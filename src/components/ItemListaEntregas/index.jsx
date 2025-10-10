@@ -93,11 +93,11 @@ const ItemListaEntregas = ({ infoEntrega }) => {
                                 method: "wallet_addEthereumChain",
                                 params: [{
                                     chainId: chainIdPasseo,
-                                    chainName: "Passeo Testnet",
+                                    chainName: "Paseo PassetHub",
                                     rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
                                     nativeCurrency: {
-                                        name: "ETH",
-                                        symbol: "ETH",
+                                        name: "PAS",
+                                        symbol: "PAS",
                                         decimals: 18,
                                     },
                                     blockExplorerUrls: ["https://explorer.passeo.io"],
