@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import styled from "styled-components"
-import walletAddressLogada from "../../utils/walletAddressLogada" // Importa o objeto com a função
+import walletAddressLogada from "../../utils/walletAddressLogada"
 
 const HeaderStyled = styled.header`
     display: flex;
@@ -26,14 +26,27 @@ const MenuNavegacao = styled.nav`
 const Header = ({ layout }) => {
     const [walletAddress, setWalletAddress] = useState("")
 
+    // Verifica se já está autorizado
     useEffect(() => {
-        async function fetchAddress() {
-            const address = await walletAddressLogada.getWalletAddress()
-            setWalletAddress(address)
+        async function checkWalletConnection() {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({ method: "eth_accounts" })
+                if (accounts.length > 0) {
+                    const address = await walletAddressLogada.getWalletAddress()
+                    setWalletAddress(address)
+                }
+            }
         }
 
-        fetchAddress()
+        checkWalletConnection()
     }, [])
+
+    const handleConnectWallet = async () => {
+        const address = await walletAddressLogada.getWalletAddress()
+        if (address) {
+            setWalletAddress(address)
+        }
+    }
 
     return (
         <HeaderStyled>
@@ -46,7 +59,13 @@ const Header = ({ layout }) => {
                         <NavLink to={"/seja-distribuidor"}>Quero ser um distribuidor</NavLink>
                     </MenuNavegacao>
 
-                    <div>Endereço conectado: {walletAddress || "Não conectado"}</div>
+                    <div>
+                        {walletAddress ? (
+                            <>Endereço conectado: {walletAddress}</>
+                        ) : (
+                            <button onClick={handleConnectWallet}>Conectar carteira</button>
+                        )}
+                    </div>
                 </>
             )}
         </HeaderStyled>
