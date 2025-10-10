@@ -19,7 +19,6 @@ const ContainerPrincipalStyled = styled.div`
 
 const NovoDistribuidor = () => {
     const [metamaskInfo, setMetamaskInfo] = useState({
-        chavePublica: "0x06A85356DCb5b307096726FB86A78c59D38e08ee",
         mensagemRetorno: "",
     })
 
@@ -101,10 +100,18 @@ const NovoDistribuidor = () => {
             // Aguarda confirmação da transação
             await tx.wait()
         } catch (error) {
-            console.error("Erro ao registrar distribuidora:", error)
+
+            let message = ""
+            if (error.reason) {
+                message = error.reason
+            } else if (error.message) {
+                message = error.message
+            } else {
+                message= "Erro ao adicionar Distribuidor. Veja o console para mais detalhes."
+            }
             setMetamaskInfo({
                 ...metamaskInfo,
-                mensagemRetorno: "Erro ao registrar distribuidora. Veja o console para mais detalhes",
+                mensagemRetorno: message,
             })
         }
     }
@@ -135,14 +142,6 @@ const NovoDistribuidor = () => {
                                         <li>{metamaskInfo.mensagemRetorno}</li>
                                     </ul>
                                 </li>
-                                {metamaskInfo.chavePublica && (
-                                    <li>
-                                        Chave pública:
-                                        <ul>
-                                            <li>{metamaskInfo.chavePublica}</li>
-                                        </ul>
-                                    </li>
-                                )}
                             </ul>
 
                             <h5></h5>
