@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react"
 import { NavLink } from "react-router-dom"
 import styled from "styled-components"
 import walletAddressLogada from "../../utils/walletAddressLogada"
+import { useRecoilState } from "recoil"
+import { walletAddressState } from "../../recoil/walletAtom"
 
 const HeaderStyled = styled.header`
     display: flex;
@@ -22,9 +24,10 @@ const MenuNavegacao = styled.nav`
     display: flex;
     gap: 30px;
 `
+const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const Header = ({ layout }) => {
-    const [walletAddress, setWalletAddress] = useState("")
+    const [walletAddress, setWalletAddress] = useRecoilState(walletAddressState)
 
     // Verifica se já está autorizado
     useEffect(() => {
@@ -45,7 +48,65 @@ const Header = ({ layout }) => {
         const address = await walletAddressLogada.getWalletAddress()
         if (address) {
             setWalletAddress(address)
+            
+            // Verifica se já está na rede Paseo
+            const chainIdAtual = await window.ethereum.request({ method: "eth_chainId" })
+
+            if (chainIdAtual !== chainIdPasseo) {
+                try {
+                    await window.ethereum.request({
+                        method: "wallet_switchEthereumChain",
+                        params: [{ chainId: chainIdPasseo }],
+                    })
+                } catch (switchError) {
+                    if (switchError.code === 4902) {
+                        try {
+                            await window.ethereum.request({
+                                method: "wallet_addEthereumChain",
+                                params: [
+                                    {
+                                        chainId: chainIdPasseo,
+                                        chainName: "Paseo PassetHub",
+                                        rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
+                                        nativeCurrency: {
+                                            name: "PAS",
+                                            symbol: "PAS",
+                                            decimals: 18,
+                                        },
+                                        blockExplorerUrls: ["https://explorer.passeo.io"],
+                                    },
+                                ],
+                            })
+
+                            // Após adicionar, tenta trocar para ela
+                            await window.ethereum.request({
+                                method: "wallet_switchEthereumChain",
+                                params: [{ chainId: chainIdPasseo }],
+                            })
+                        } catch (addError) {
+                            handleError(addError, "Erro ao adicionar a rede Paseo ao MetaMask")
+                            return
+                        }
+                    } else {
+                        handleError(switchError, "Troca de rede recusada. Conecte à rede Paseo para continuar")
+                        return
+                    }
+                }
+            }
         }
+
+    }
+
+    const handleError = (error, fallbackMessage) => {
+        let message = fallbackMessage
+        if (error.code === 4001) {
+            message = "Solicitação rejeitada pelo usuário."
+        } else if (error.reason) {
+            message = error.reason
+        } else if (error.message) {
+            message = error.message
+        }
+        console.error("Erro MetaMask:", error)
     }
 
     return (
