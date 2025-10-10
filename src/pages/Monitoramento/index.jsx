@@ -1,16 +1,12 @@
-import { useEffect, useState } from "react"
 import styled from "styled-components"
 import ConsultaCaminhoes from "../../components/ConsultaCaminhoes"
 import HistoricoCargas from "../../components/HistoricoCargas"
 import ItemListaEntregas from "../../components/ItemListaEntregas"
-// import { useRecoilState } from "recoil"
 import { entregaSelecionadaState, entregasFiltradasState, entregasState } from "../../recoil/entregasAtom"
 import SelectPersonalizado from "../../components/SelectPersonalizado"
 import Botao from "../../components/Botao"
 import { caminhaoSelecionadoState, caminhoesState, placasCaminhoesState } from "../../recoil/caminhoesAtom"
-
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-
 import { historicoCargasState } from "../../recoil/entregasAtom"
 
 const ContainerStyled = styled.div`
@@ -63,10 +59,7 @@ const Monitoramento = () => {
         label: `${item.placaCaminhao} - ${formatarEndereco(item.endereco)}`
     }))
 
-
-
     const setCaminhoes = useSetRecoilState(caminhoesState)
-
     const enderecoCaminhaoSelecionado = caminhaoSelecionado?.detalhesCaminhao?.[0]?.endereco
     const listaCargas = useRecoilValue(historicoCargasState)
     const setListaCargas = useSetRecoilState(historicoCargasState)

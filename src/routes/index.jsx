@@ -3,7 +3,7 @@ import LayoutDefault from "../layouts/LayoutDefault"
 import Monitoramento from "../pages/Monitoramento"
 import CadastrarCaminhao from "../pages/CadastrarCaminhao"
 import NovoDistribuidor from "../pages/NovoDistribuidor"
-import LayoutCompravante from "../layouts/LayoutCompravante"
+import LayoutComprovante from "../layouts/LayoutComprovante"
 import ComprovanteEntrega from "../pages/ComprovanteEntrega"
 
 export const router = createBrowserRouter([
@@ -17,10 +17,8 @@ export const router = createBrowserRouter([
         ],
     },
     {
-        path: "qrcode",
-        element: <LayoutCompravante />,
-        children: [
-            { path: "qrcode/", element: <ComprovanteEntrega /> },
-        ],
+        path: "/comprovante/qrcode",
+        element: <LayoutComprovante />,
+        children: [{ path: ":idEntrega", element: <ComprovanteEntrega /> }],
     },
 ])

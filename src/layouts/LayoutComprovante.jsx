@@ -12,14 +12,14 @@ const ContainerStyled = styled.div`
 const SectionPrincipalStyled = styled.section`
     display: flex;
     justify-content: space-between;
-    padding: 50px;
+    /* padding: 50px; */
     box-sizing: border-box;
 `
 
-const LayoutCompravante = () => {
+const LayoutComprovante = () => {
     return (
         <ContainerStyled>
-            <Header />
+            <Header layout="publico"/>
 
             <SectionPrincipalStyled>
                 <main>
@@ -31,4 +31,4 @@ const LayoutCompravante = () => {
     )
 }
 
-export default LayoutCompravante
+export default LayoutComprovante

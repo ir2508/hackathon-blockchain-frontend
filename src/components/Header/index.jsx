@@ -7,7 +7,7 @@ const HeaderStyled = styled.header`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #F0F1F2;
+    background-color: #f0f1f2;
     box-shadow: 2px 2px 5px #ccc;
     width: 100vw;
     max-height: 150px;
@@ -23,7 +23,7 @@ const MenuNavegacao = styled.nav`
     gap: 30px;
 `
 
-const Header = () => {
+const Header = ({ layout }) => {
     const [walletAddress, setWalletAddress] = useState("")
 
     useEffect(() => {
@@ -38,14 +38,17 @@ const Header = () => {
     return (
         <HeaderStyled>
             <h1>Logichain</h1>
-            <MenuNavegacao>
-                <NavLink to={"/"}>Monitoramento</NavLink>
-                <NavLink to={"/cadastro-caminhao"}>Cadastrar meu caminhão</NavLink>
-                <NavLink to={"/seja-distribuidor"}>Quero ser um distribuidor</NavLink>
-            </MenuNavegacao>
-            <div>
-                Endereço conectado: {walletAddress || "Não conectado"}
-            </div>
+            {layout !== "publico" && (
+                <>
+                    <MenuNavegacao>
+                        <NavLink to={"/"}>Monitoramento</NavLink>
+                        <NavLink to={"/cadastro-caminhao"}>Cadastrar meu caminhão</NavLink>
+                        <NavLink to={"/seja-distribuidor"}>Quero ser um distribuidor</NavLink>
+                    </MenuNavegacao>
+
+                    <div>Endereço conectado: {walletAddress || "Não conectado"}</div>
+                </>
+            )}
         </HeaderStyled>
     )
 }
