@@ -12,6 +12,47 @@ npm run dev
 ---
 
 
+# SOBRE O PROJETO
+
+Site para demostração: https://entrega-congelada.nanoarena.xyz/
+
+## ❄️ Desperdício de Alimentos Congelados: Um Problema Invisível, Mas Gigante
+
+O desperdício de alimentos é um dos grandes desafios globais — e os alimentos congelados, embora pareçam mais protegidos, não estão imunes. A cadeia de frio, que envolve o transporte e armazenamento em temperaturas controladas, é extremamente vulnerável. Uma falha no sistema de refrigeração, mesmo que breve, pode comprometer a qualidade dos produtos, levando à contaminação, perda nutricional e descarte prematuro.
+
+Em muitos casos, caminhões frigoríficos enfrentam problemas técnicos, falta de monitoramento contínuo ou negligência operacional. O resultado? Alimentos que chegam ao destino com temperatura acima do ideal, sem que o consumidor ou o distribuidor perceba. Isso não só representa risco à saúde, como também gera prejuízos financeiros e ambientais significativos.
+
+---
+
+## 🚚 A Solução: Blockchain + IoT para Entregas Confiáveis
+
+Pensando nesse cenário, desenvolvemos uma solução que une **blockchain** e **sensores IoT** para garantir a integridade das entregas de alimentos congelados.
+
+### Como funciona:
+- Distribuidoras cadastram suas frotas de caminhões na plataforma.
+- Cada caminhão é vinculado a um sensor de temperatura IoT.
+- Durante o trajeto, o sensor realiza aferições constantes e envia os dados diretamente para a blockchain.
+- Esses dados são imutáveis, auditáveis e acessíveis em tempo real.
+- Se a temperatura ultrapassar **0°C**, a carga é automaticamente rejeitada, garantindo segurança e transparência.
+
+O formulário digital presente na interface representa a abstração do sensor IoT — simulando o comportamento do dispositivo físico e permitindo testes no ambiente de desenvolvimento.
+
+---
+
+## 🌐 Benefícios Comerciais
+
+- **Confiança do consumidor**: Transparência total sobre a qualidade da entrega.
+- **Redução de perdas**: Menos desperdício, mais eficiência.
+- **Rastreabilidade**: Cada etapa da entrega é registrada e pode ser auditada.
+- **Sustentabilidade**: Menos descarte, menos impacto ambiental.
+- **Escalabilidade**: A solução pode ser aplicada em diferentes regiões e tipos de alimentos.
+
+---
+
+Essa é mais do que uma inovação tecnológica — é uma revolução na forma como lidamos com alimentos congelados.
+
+
+
 # 📦 Sistema de Transporte de Carnes Congeladas — Documentação Técnica
 
 ## 🔗 Contratos Envolvidos
