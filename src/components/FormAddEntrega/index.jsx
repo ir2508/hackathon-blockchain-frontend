@@ -13,7 +13,7 @@ const contratoABI = [
     "function cadastrarCarga(address chaveCaminhao) public",
 ]
 
-const contratoEndereco = "0x8965c031D70e7aE4e7d33554374d1c655d87E8f2"
+const contratoEndereco = "0x4A00241D669667C63372fA82BCC696Db9480465A"
 
 const FormAddEntrega = () => {
 

@@ -5,7 +5,7 @@ import { caminhoesState } from "../recoil/caminhoesAtom"
 import { useSetRecoilState, useRecoilValue } from "recoil"
 import { obterCargaDetalhada } from "../utils/cargaDetalhada"
 
-const enderecoContratoCarga = "0xE02A096d7D584DeA0C18A0e041B4dDB8BBBcD445"
+const enderecoContratoCarga = "0x2a038995FC9694296933bbF825904C59fE1aa13B"
 const abiContratoCarga = ["function obterHistorico(address chaveCaminhao) view returns (uint[])"]
 
 const HistoricoCargas = ({ chaveCaminhao }) => {

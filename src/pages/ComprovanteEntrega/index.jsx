@@ -99,6 +99,9 @@ const ComprovanteEntrega = () => {
                 <h4 className="mt-3">Address</h4>
                 <span> {infoEntrega?.address || "Não disponível"} </span>
 
+                <h4 className="mt-3">txId</h4>
+                <span> {infoEntrega?.txId || "Não disponível"} </span>
+
                 <h4 className="mt-3">Histórico Temperatura</h4>
                 <span>
                     { 

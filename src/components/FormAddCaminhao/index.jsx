@@ -10,7 +10,7 @@ const contratoABI = [
     "function cadastrarMeuCaminhao(string placa) public",
 ]
 
-const contratoEndereco = "0xeAB24340984F926d0B1a6C97309AD2d8B3a26cEe"
+const contratoEndereco = "0xA127207F272d19bec252f7f55110E7295d41d8c4"
 
 const FormAddCaminhao = () => {
     const [metamaskInfo, setMetamaskInfo] = useState({

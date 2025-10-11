@@ -10,7 +10,7 @@ import handleMetamaskError from "../../utils/handleMetamaskError"
 
 const contratoABI = ["function adicionarAfericao(uint cargaId, int temperaturaDecimosCelsius) public"]
 
-const contratoEndereco = "0x7290668053c1f1467F93d63561571e1Be3cBeA9A"
+const contratoEndereco = "0xCf720Bef4e632A69A82aE9dCe8869c9Fa91Adf92"
 
 const FormTemperatura = ({ carga }) => {
 

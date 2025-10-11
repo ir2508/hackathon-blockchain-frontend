@@ -7,7 +7,7 @@ import ModalMetamask from "../../components/ModalMetamask"
 import handleMetamaskError from "../../utils/handleMetamaskError"
 
 const contratoABI = ["function registrarComoAdministradora() public"]
-const contratoEndereco = "0xAFB1F3b374eb69daf945cEAe9315CB269aaA7411"
+const contratoEndereco = "0x0E2E739DC04AfE340106F74672F019A469F6C226"
 
 const ContainerPrincipalStyled = styled.div`
     /* display: flex;
