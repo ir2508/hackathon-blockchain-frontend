@@ -124,7 +124,7 @@ const Header = ({ layout }) => {
                         {walletAddress ? (
                             <>Endereço conectado: {walletAddress}</>
                         ) : (
-                            <button onClick={handleConnectWallet}>Conectar carteira</button>
+                            <button onClick={handleConnectWallet}>Conectar Metamask</button>
                         )}
                     </div>
                 </>

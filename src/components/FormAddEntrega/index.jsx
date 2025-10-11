@@ -2,17 +2,26 @@ import { useRecoilState } from "recoil"
 import Botao from "../Botao"
 import { useState } from "react"
 import { placasCaminhoesState, caminhoesState } from '../../recoil/caminhoesAtom';
+import { useRecoilValue } from "recoil"
 import SelectPersonalizado from '../SelectPersonalizado';
 import { ethers } from "ethers"
+import { walletAddressState } from "../../recoil/walletAtom"
+import ModalMetamask from "../../components/ModalMetamask"
+import handleMetamaskError from "../../utils/handleMetamaskError"
 
 const contratoABI = [
     "function cadastrarCarga(address chaveCaminhao) public",
 ]
 
 const contratoEndereco = "0x8965c031D70e7aE4e7d33554374d1c655d87E8f2"
-const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const FormAddEntrega = () => {
+
+    const [metamaskInfo, setMetamaskInfo] = useState({
+        mensagemRetorno: "",
+    })
+
+    const walletAddress = useRecoilValue(walletAddressState)
 
     const formatarEndereco = (endereco) => {
         if (!endereco || endereco.length < 10) return endereco
@@ -36,8 +45,21 @@ const FormAddEntrega = () => {
     const handleAddEntrega = async (e) => {
         e.preventDefault()
 
-        if (!endereco || endereco.trim() === "") {
-            alert("Endereço inválida ou não informada.")
+        setMetamaskInfo({
+            mensagemRetorno: "Aguardando ação do usuário ...",
+        })
+
+        if (!window.ethereum) {
+            setMetamaskInfo({
+                mensagemRetorno: "MetaMask não está disponível",
+            })
+            return
+        }
+
+        if (!walletAddress) {
+            setMetamaskInfo({
+                mensagemRetorno: "Priemeiro conecte a MetaMask para continuar",
+            })
             return
         }
 
@@ -46,43 +68,6 @@ const FormAddEntrega = () => {
             if (!window.ethereum) {
                 alert("MetaMask não está disponível")
                 return
-            }
-
-            // Verifica se está na rede Passeo
-            const chainIdAtual = await window.ethereum.request({ method: "eth_chainId" })
-
-            if (chainIdAtual !== chainIdPasseo) {
-                try {
-                    await window.ethereum.request({
-                        method: "wallet_switchEthereumChain",
-                        params: [{ chainId: chainIdPasseo }],
-                    })
-                } catch (switchError) {
-                    if (switchError.code === 4902) {
-                        try {
-                            await window.ethereum.request({
-                                method: "wallet_addEthereumChain",
-                                params: [{
-                                    chainId: chainIdPasseo,
-                                    chainName: "Paseo PassetHub",
-                                    rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
-                                    nativeCurrency: {
-                                        name: "PAS",
-                                        symbol: "PAS",
-                                        decimals: 18,
-                                    },
-                                    blockExplorerUrls: ["https://explorer.passeo.io"],
-                                }],
-                            })
-                        } catch (addError) {
-                            alert("Erro ao adicionar a rede Passeo ao MetaMask.")
-                            return
-                        }
-                    } else {
-                        alert("Troca de rede recusada. Conecte à rede Passeo para continuar.")
-                        return
-                    }
-                }
             }
 
             // Solicita conexão com a carteira
@@ -95,21 +80,19 @@ const FormAddEntrega = () => {
             // Instancia o contrato
             const contrato = new ethers.Contract(contratoEndereco, contratoABI, signer)
 
-            // Chama a função do contrato com a placa
-            const tx = await contrato.cadastrarCarga(endereco)
-            await tx.wait()
+            try {
+                // Chama a função do contrato com a placa
+                const tx = await contrato.cadastrarCarga(endereco)
+                await tx.wait()
+                setMetamaskInfo({
+                    mensagemRetorno: "Carga registrada com sucesso!",
+                })
+            } catch (txError) {
+                handleMetamaskError(txError, "Erro ao cadastrar entrega", setMetamaskInfo)
+            }
 
         } catch (error) {
-            console.error("Erro ao cadastrar carga:", error)
-
-            // Tenta extrair a razão do revert
-            if (error.reason) {
-                alert(`Erro ao cadastrar carga: ${error.reason}`)
-            } else if (error.message) {
-                alert(`Erro ao cadastrar carga: ${error.message}`)
-            } else {
-                alert("Erro ao cadastrar carga. Veja o console para mais detalhes.")
-            }
+            handleMetamaskError(error, "Erro inesperado", setMetamaskInfo)
         }
     }
 
@@ -118,10 +101,17 @@ const FormAddEntrega = () => {
             <h5 className="text-center">Cadastrar nova entrega</h5>
             <form className="mt-3">
                 <SelectPersonalizado label="Placa do caminhão" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} conteudo={listaPersonalizada} />
-                <Botao classBootstrap="btn-success" largura={"100%"} onClick={handleAddEntrega}>
+                <button
+                    type="button"
+                    className="btn btn-success mt-5"
+                    onClick={handleAddEntrega}
+                    data-bs-toggle="modal"
+                    data-bs-target="#loginMetamask"
+                >
                     Cadastrar nova entrega
-                </Botao>
+                </button>
             </form>
+            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno} />
         </>
     )
 }

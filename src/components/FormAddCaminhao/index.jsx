@@ -49,7 +49,7 @@ const FormAddCaminhao = () => {
 
             if (!walletAddress) {
                 setMetamaskInfo({
-                    mensagemRetorno: "Faça login na MetaMask para continuar",
+                    mensagemRetorno: "Priemeiro conecte a MetaMask para continuar",
                 })
                 return
             }
