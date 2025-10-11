@@ -15,10 +15,12 @@ export async function buscarTxIdCarga(cargaId, fromBlock = 0, toBlock = "latest"
         const latestBlock = await provider.getBlockNumber()
         const endBlock = toBlock === "latest" ? latestBlock : toBlock
 
-        // Busca todos os logs do evento CargaCadastrada
+        // Gera o tópico do evento manualmente
+        const eventTopic = ethers.id("CargaCadastrada(uint256,address,address)")
+
         const filtro = {
             address: contratoEndereco,
-            topics: [ethers.id("CargaCadastrada(uint256,address,address)")],
+            topics: [eventTopic],
             fromBlock,
             toBlock: endBlock
         }
