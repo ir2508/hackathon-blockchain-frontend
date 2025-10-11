@@ -11,21 +11,19 @@ const ContainerStyled = styled.div`
 
 const SectionPrincipalStyled = styled.section`
     display: flex;
-    justify-content: space-between;
-    /* padding: 50px; */
+    justify-content: center;
     box-sizing: border-box;
 `
 
 const LayoutComprovante = () => {
     return (
         <ContainerStyled>
-            <Header layout="publico"/>
+            <Header layout="publico" />
 
             <SectionPrincipalStyled>
                 <main>
                     <Outlet />
                 </main>
-                <Aside />
             </SectionPrincipalStyled>
         </ContainerStyled>
     )

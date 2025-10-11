@@ -12,8 +12,14 @@ import { useEffect } from "react"
 import { useState } from "react"
 
 const DetalhesComprovanteStyled = styled.div`
-    width: 100vw;
+    max-width: 100vw;
     padding: 30px;
+    display: flex;
+    flex-direction: column;
+
+    @media (min-width: 768px) {
+        max-width: 500px;
+    }
 `
 
 const StatusSectionStyled = styled.section`
@@ -59,38 +65,52 @@ const ComprovanteEntrega = () => {
 
     return (
         <DetalhesComprovanteStyled>
-            
-            <IconStyled
-                className={
-                    infoEntrega?.status === "Em andamento"
-                        ? "bi bi-hourglass-split"
-                        : infoEntrega?.status === "Finalizada"
-                        ? "bi bi-check-circle-fill"
-                        : infoEntrega?.status === "Rejeitada"
-                        ? "bi bi-x-circle-fill"
-                        : "bi bi-question-circle-fill"
-                }
-                style={{
+
+            <StatusSectionStyled>
+
+                <IconStyled
+                    className={
+                        infoEntrega?.status === "Em andamento"
+                            ? "bi bi-hourglass-split"
+                            : infoEntrega?.status === "Finalizada"
+                                ? "bi bi-check-circle-fill"
+                                : infoEntrega?.status === "Rejeitada"
+                                    ? "bi bi-x-circle-fill"
+                                    : "bi bi-question-circle-fill"
+                    }
+                    style={{
+                        color:
+                            infoEntrega?.status === "Em andamento"
+                                ? "orange"
+                                : infoEntrega?.status === "Finalizada"
+                                    ? "green"
+                                    : infoEntrega?.status === "Rejeitada"
+                                        ? "red"
+                                        : "gray",
+                    }}
+                />
+
+                <h3 style={{
                     color:
                         infoEntrega?.status === "Em andamento"
                             ? "orange"
                             : infoEntrega?.status === "Finalizada"
-                            ? "green"
-                            : infoEntrega?.status === "Rejeitada"
-                            ? "red"
-                            : "gray",
-                }}
-            />
+                                ? "green"
+                                : infoEntrega?.status === "Rejeitada"
+                                    ? "red"
+                                    : "gray",
+                }}>{infoEntrega?.status}</h3>
+            </StatusSectionStyled>
 
             <DetalhesEntregaStyled>
                 <h4>Entrega iniciada</h4>
                 <span>
-                    { infoEntrega?.dataInicio ? infoEntrega.dataInicio.toLocaleString("pt-BR") : "Carregando..."}
+                    {infoEntrega?.dataInicio ? infoEntrega.dataInicio.toLocaleString("pt-BR") : "Carregando..."}
                 </span>
 
                 <h4 className="mt-3">Entrega finalizada</h4>
                 <span>
-                    { infoEntrega?.dataFim ? infoEntrega.dataFim.toLocaleString("pt-BR") : "Carregando..."}
+                    {infoEntrega?.dataFim ? infoEntrega.dataFim.toLocaleString("pt-BR") : "Carregando..."}
                 </span>
 
                 <h4 className="mt-3">Placa do caminhão</h4>
@@ -104,7 +124,7 @@ const ComprovanteEntrega = () => {
 
                 <h4 className="mt-3">Histórico Temperatura</h4>
                 <span>
-                    { 
+                    {
                         infoEntrega?.afericoes?.length > 0 ? (
                             <ul>
                                 {infoEntrega.afericoes.map((afericao, index) => (

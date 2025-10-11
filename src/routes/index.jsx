@@ -17,7 +17,7 @@ export const router = createBrowserRouter([
         ],
     },
     {
-        path: "/comprovante/qrcode",
+        path: "/comprovante/",
         element: <LayoutComprovante />,
         children: [{ path: ":idEntrega", element: <ComprovanteEntrega /> }],
     },

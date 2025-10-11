@@ -112,10 +112,10 @@ const ItemListaEntregas = ({ infoEntrega }) => {
 
             // Instancia o contrato
             const contrato = new ethers.Contract(contratoEndereco, contratoABI, signer)
-            
+
             try {
                 // Chama a função do contrato com a placa
-                const tx = await contrato.finalizarCarga( infoEntrega.id )
+                const tx = await contrato.finalizarCarga(infoEntrega.id)
                 await tx.wait()
                 setMetamaskInfo({
                     mensagemRetorno: "Entrega Finalizada com sucesso!",
@@ -127,12 +127,12 @@ const ItemListaEntregas = ({ infoEntrega }) => {
         } catch (error) {
             handleMetamaskError(error, "Erro inesperado", setMetamaskInfo)
         }
-        
+
     }
 
     const handleExibirEntrega = (e) => {
         e.preventDefault()
-        navigate(`/comprovante/qrcode/${infoEntrega.id}`)
+        navigate(`/comprovante/${infoEntrega.id}`)
     }
 
 
@@ -148,7 +148,7 @@ const ItemListaEntregas = ({ infoEntrega }) => {
                 <h5>Caminhão: {infoEntrega.placaCaminhao}</h5>
                 <h5> {formatarEndereco(infoEntrega.address)}</h5>
                 Status: <StatusTexto status={infoEntrega.status}>{infoEntrega.status}</StatusTexto>
-                <br/>
+                <br />
                 Distribuidora: {formatarEndereco(infoEntrega.addressDistribuidora)}
                 <div>
                     <Botao classBootstrap="btn-outline-success m-2" onClick={handleExibirEntrega}>
