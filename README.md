@@ -14,7 +14,7 @@ npm run dev
 
 # SOBRE O PROJETO
 
-Site para demostração: https://entrega-congelada.nanoarena.xyz/
+Site para demostração do protótipo: https://entrega-congelada.nanoarena.xyz/
 
 ## ❄️ Desperdício de Alimentos Congelados: Um Problema Invisível, Mas Gigante
 
