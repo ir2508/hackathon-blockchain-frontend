@@ -1,16 +1,20 @@
 import styled from "styled-components"
 import Botao from "../Botao"
+import { useEffect, useState } from "react"
 import { useRecoilState } from "recoil"
+import { useRecoilValue } from "recoil"
 import { entregaSelecionadaState, entregasState } from "../../recoil/entregasAtom"
 import GraficoTemperatura from "../GraficoTemperatura"
 import { ethers } from "ethers"
+import { walletAddressState } from "../../recoil/walletAtom"
+import ModalMetamask from "../../components/ModalMetamask"
+import handleMetamaskError from "../../utils/handleMetamaskError"
 
 const contratoABI = [
     "function finalizarCarga(uint cargaId) public",
 ]
 
 const contratoEndereco = "0x8965c031D70e7aE4e7d33554374d1c655d87E8f2"
-const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const StatusTexto = styled.span`
     color: ${({ status }) => (status === "Finalizada" ? "green" : status === "Rejeitada" ? "red" : status === "Em andamento" ? "orange" : "black")};
@@ -51,6 +55,12 @@ const ItemListaEntregas = ({ infoEntrega }) => {
     const [entregaSelecionada, setEntregaSelecionada] = useRecoilState(entregaSelecionadaState)
     const [listaEntregas, setListaEntregas] = useRecoilState(entregasState)
 
+    const [metamaskInfo, setMetamaskInfo] = useState({
+        mensagemRetorno: "",
+    })
+
+    const walletAddress = useRecoilValue(walletAddressState)
+
     const handleRegistrarTemperatura = (e) => {
         e.preventDefault()
 
@@ -63,57 +73,33 @@ const ItemListaEntregas = ({ infoEntrega }) => {
 
     const handleFinalizarEntrega = async (e) => {
         e.preventDefault()
-        // alert(infoEntrega.id)
+
+        setMetamaskInfo({
+            mensagemRetorno: "Aguardando ação do usuário ...",
+        })
+
+        if (!window.ethereum) {
+            setMetamaskInfo({
+                mensagemRetorno: "MetaMask não está disponível",
+            })
+            return
+        }
+
+        if (!walletAddress) {
+            setMetamaskInfo({
+                mensagemRetorno: "Priemeiro conecte a MetaMask para continuar",
+            })
+            return
+        }
 
         if (!infoEntrega.id || infoEntrega.id === "") {
-            alert("Entrega inválida ou não informada.")
+            setMetamaskInfo({
+                mensagemRetorno: "Entrega inválida ou não informada.",
+            })
             return
         }
 
         try {
-            // Verifica se o MetaMask está disponível
-            if (!window.ethereum) {
-                alert("MetaMask não está disponível")
-                return
-            }
-
-            // Verifica se está na rede Passeo
-            const chainIdAtual = await window.ethereum.request({ method: "eth_chainId" })
-
-            if (chainIdAtual !== chainIdPasseo) {
-                try {
-                    await window.ethereum.request({
-                        method: "wallet_switchEthereumChain",
-                        params: [{ chainId: chainIdPasseo }],
-                    })
-                } catch (switchError) {
-                    if (switchError.code === 4902) {
-                        try {
-                            await window.ethereum.request({
-                                method: "wallet_addEthereumChain",
-                                params: [{
-                                    chainId: chainIdPasseo,
-                                    chainName: "Paseo PassetHub",
-                                    rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
-                                    nativeCurrency: {
-                                        name: "PAS",
-                                        symbol: "PAS",
-                                        decimals: 18,
-                                    },
-                                    blockExplorerUrls: ["https://explorer.passeo.io"],
-                                }],
-                            })
-                        } catch (addError) {
-                            alert("Erro ao adicionar a rede Passeo ao MetaMask.")
-                            return
-                        }
-                    } else {
-                        alert("Troca de rede recusada. Conecte à rede Passeo para continuar.")
-                        return
-                    }
-                }
-            }
-
             // Solicita conexão com a carteira
             await window.ethereum.request({ method: "eth_requestAccounts" })
 
@@ -123,22 +109,20 @@ const ItemListaEntregas = ({ infoEntrega }) => {
 
             // Instancia o contrato
             const contrato = new ethers.Contract(contratoEndereco, contratoABI, signer)
-
-            // Chama a função do contrato com a placa
-            const tx = await contrato.finalizarCarga( infoEntrega.id )
-            await tx.wait()
+            
+            try {
+                // Chama a função do contrato com a placa
+                const tx = await contrato.finalizarCarga( infoEntrega.id )
+                await tx.wait()
+                setMetamaskInfo({
+                    mensagemRetorno: "Entrega Finalizada com sucesso!",
+                })
+            } catch (txError) {
+                handleMetamaskError(txError, "Erro ao cadastrar aferição", setMetamaskInfo)
+            }
 
         } catch (error) {
-            console.error("Erro ao aferir temperatura:", error)
-
-            // Tenta extrair a razão do revert
-            if (error.reason) {
-                alert(`Erro ao aferir temperatura: ${error.reason}`)
-            } else if (error.message) {
-                alert(`Erro ao aferir temperatura: ${error.message}`)
-            } else {
-                alert("Erro ao aferir temperatura. Veja o console para mais detalhes.")
-            }
+            handleMetamaskError(error, "Erro inesperado", setMetamaskInfo)
         }
         
     }
@@ -172,9 +156,16 @@ const ItemListaEntregas = ({ infoEntrega }) => {
                             <Botao classBootstrap="btn-outline-success m-2" onClick={handleRegistrarTemperatura}>
                                 Registrar temperatura
                             </Botao>
-                            <Botao classBootstrap="btn-success m-2" onClick={handleFinalizarEntrega}>
+                            <button
+                                type="button"
+                                className="btn btn-success m-2"
+                                onClick={handleFinalizarEntrega}
+                                data-bs-toggle="modal"
+                                data-bs-target="#loginMetamask"
+                            >
                                 Finalizar entrega
-                            </Botao>
+                            </button>
+                            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno} />
                         </>
                     ) : (
                         ""
