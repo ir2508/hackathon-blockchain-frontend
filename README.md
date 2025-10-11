@@ -7,6 +7,7 @@ Para instalar as dependências e iniciar o servidor de desenvolvimento:
 ```bash
 npm install
 npm run dev
+```
 
 ---
 
