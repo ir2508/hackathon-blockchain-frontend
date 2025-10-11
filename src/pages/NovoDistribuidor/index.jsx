@@ -74,7 +74,7 @@ const NovoDistribuidor = () => {
                 Cadastrar minha distribuidora
             </button>
 
-            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno} />
+            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno}  id="loginMetamask" />
         </ContainerPrincipalStyled>
     )
 }

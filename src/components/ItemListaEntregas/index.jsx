@@ -165,7 +165,7 @@ const ItemListaEntregas = ({ infoEntrega }) => {
                             >
                                 Finalizar entrega
                             </button>
-                            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno} />
+                            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno} id="loginMetamask" />
                         </>
                     ) : (
                         ""

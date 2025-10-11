@@ -1,13 +1,13 @@
 // components/ModalMetamask.jsx
 import React from "react"
 
-const ModalMetamask = ({ mensagem }) => {
+const ModalMetamask = ({ mensagem, id }) => {
     return (
-        <div className="modal fade" id="loginMetamask" tabIndex="-1" aria-labelledby="loginMetamaskLabel" aria-hidden="true">
+        <div className="modal fade" id={id} tabIndex="-1" aria-labelledby="loginMetamaskLabel" aria-hidden="true">
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h1 className="modal-title fs-5" id="loginMetamaskLabel">
+                        <h1 className="modal-title fs-5" id={id}>
                             Informações de conexão MetaMask
                         </h1>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

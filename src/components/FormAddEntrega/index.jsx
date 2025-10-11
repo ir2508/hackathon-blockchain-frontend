@@ -107,7 +107,7 @@ const FormAddEntrega = () => {
                     Cadastrar nova entrega
                 </button>
             </form>
-            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno} />
+            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno}  id="loginMetamask" />
         </>
     )
 }

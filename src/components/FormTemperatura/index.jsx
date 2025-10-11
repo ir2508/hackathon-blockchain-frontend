@@ -113,14 +113,14 @@ const FormTemperatura = ({ carga }) => {
                         className="btn btn-success mt-5"
                         onClick={handleAferirTemperatura}
                         data-bs-toggle="modal"
-                        data-bs-target="#loginMetamask"
+                        data-bs-target="#loginMetamask123"
                         style={{ width: "100%" }}
                     >
                         Registrar temperatura
                     </button>
                 </div>
             </form>
-            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno} />
+            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno}  id="loginMetamask123" />
         </>
     )
 }
