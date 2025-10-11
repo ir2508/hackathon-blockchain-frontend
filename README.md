@@ -128,7 +128,9 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 
-##  Fluxo grama da operação Markdown
+## 🧭 Diagrama de Fluxo — Transporte de Carnes congeladas
+
+```text
 [DistribuidoraControle]
         |
         v
@@ -167,6 +169,7 @@ If you are developing a production application, we recommend using TypeScript wi
                                              v
                                      atualiza status para Finalizada
                                      finaliza carga no [CargaEstado]
+```
 
 ##  Fluxo grama da operação visual mermaid flowchart
 ```mermaid
