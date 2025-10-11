@@ -9,6 +9,7 @@ import { ethers } from "ethers"
 import { walletAddressState } from "../../recoil/walletAtom"
 import ModalMetamask from "../../components/ModalMetamask"
 import handleMetamaskError from "../../utils/handleMetamaskError"
+import { useNavigate } from "react-router-dom"
 
 const contratoABI = [
     "function finalizarCarga(uint cargaId) public",
@@ -70,6 +71,8 @@ const ItemListaEntregas = ({ infoEntrega }) => {
             acao: "registrarTemperatura",
         })
     }
+    const navigate = useNavigate()
+
 
     const handleFinalizarEntrega = async (e) => {
         e.preventDefault()
@@ -128,12 +131,10 @@ const ItemListaEntregas = ({ infoEntrega }) => {
     }
 
     const handleExibirEntrega = (e) => {
-        setEntregaSelecionada({
-            idEntrega: infoEntrega.id,
-            detalhesEntrega: listaEntregas.filter((entrega) => entrega.id === infoEntrega.id),
-            acao: "exibirEntrega",
-        })
+        e.preventDefault()
+        navigate(`/comprovante/qrcode/${infoEntrega.id}`)
     }
+
 
     const formatarEndereco = (endereco) => {
         if (!endereco || endereco.length < 10) return endereco
