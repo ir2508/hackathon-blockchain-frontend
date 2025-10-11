@@ -114,6 +114,7 @@ const FormTemperatura = ({ carga }) => {
                         onClick={handleAferirTemperatura}
                         data-bs-toggle="modal"
                         data-bs-target="#loginMetamask"
+                        style={{ width: "100%" }}
                     >
                         Registrar temperatura
                     </button>

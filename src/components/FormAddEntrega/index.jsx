@@ -98,10 +98,11 @@ const FormAddEntrega = () => {
                 <SelectPersonalizado label="Placa do caminhão" type="text" id="placaCaminhao" onChange={handleChange} obrigatorio={true} conteudo={listaPersonalizada} />
                 <button
                     type="button"
-                    className="btn btn-success mt-5"
+                    className="btn btn-success"
                     onClick={handleAddEntrega}
                     data-bs-toggle="modal"
                     data-bs-target="#loginMetamask"
+                    style={{ width: "100%" }}
                 >
                     Cadastrar nova entrega
                 </button>
