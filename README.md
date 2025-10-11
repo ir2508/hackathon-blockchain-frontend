@@ -126,3 +126,64 @@ If you are developing a production application, we recommend using TypeScript wi
 - `TransporteCarnesBase` → 0x4A00241D669667C63372fA82BCC696Db9480465A
 - `AfericaoTemperatura` → 0xCf720Bef4e632A69A82aE9dCe8869c9Fa91Adf92
 
+
+
+##  Fluxo grama da operação Markdown
+[DistribuidoraControle]
+        |
+        v
+[Distribuidora] -- registra --> [DistribuidoraControle]
+        |
+        v
+[TransporteCarnesBase] ←-- verifica permissão --←
+        |
+        v
+[CaminhaoCadastro]
+        |
+        v
+[Caminhoneiro] -- registra caminhão --> [CaminhaoCadastro]
+        |
+        v
+[TransporteCarnesBase] ←-- recebe caminhão --←
+        |
+        v
+[Distribuidora] -- cadastra carga --> [TransporteCarnesBase]
+        |
+        v
+[CargaEstado] ←-- registra carga --←
+        |
+        v
+[Caminhoneiro] -- adiciona aferição --> [AfericaoTemperatura]
+        |                                     |
+        |                                     |-- temperatura ≤ 0 --> registra aferição
+        |                                     |
+        |                                     |-- temperatura > 0 --> rejeita carga
+        |                                                               |
+        |                                                               v
+        |                                                    [TransporteCarnesBase] atualiza status
+        |
+        |-- finaliza carga manualmente --> [TransporteCarnesBase]
+                                             |
+                                             v
+                                     atualiza status para Finalizada
+                                     finaliza carga no [CargaEstado]
+
+##  Fluxo grama da operação visual mermaid flowchart
+```mermaid
+flowchart TD
+    A[DistribuidoraControle] --> B[Distribuidora]
+    B -->|Registra| A
+    B --> C[TransporteCarnesBase]
+    D[CaminhaoCadastro] --> E[Caminhoneiro]
+    E -->|Registra caminhão| D
+    E --> C
+    B -->|Cadastra carga| C
+    C --> F[CargaEstado]
+    E -->|Adiciona aferição| G[AfericaoTemperatura]
+    G -->|Temperatura ≤ 0| G
+    G -->|Temperatura > 0| C
+    E -->|Finaliza carga| C
+    C -->|Finaliza| F
+
+
+
