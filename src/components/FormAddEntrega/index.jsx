@@ -64,11 +64,6 @@ const FormAddEntrega = () => {
         }
 
         try {
-            // Verifica se o MetaMask está disponível
-            if (!window.ethereum) {
-                alert("MetaMask não está disponível")
-                return
-            }
 
             // Solicita conexão com a carteira
             await window.ethereum.request({ method: "eth_requestAccounts" })

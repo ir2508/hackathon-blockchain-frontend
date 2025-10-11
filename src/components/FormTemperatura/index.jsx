@@ -2,13 +2,24 @@ import { useEffect, useState } from "react"
 import Botao from "../Botao"
 import Input from "../Input"
 import { ethers } from "ethers"
+import { useRecoilState } from "recoil"
+import { useRecoilValue } from "recoil"
+import { walletAddressState } from "../../recoil/walletAtom"
+import ModalMetamask from "../../components/ModalMetamask"
+import handleMetamaskError from "../../utils/handleMetamaskError"
 
 const contratoABI = ["function adicionarAfericao(uint cargaId, int temperaturaDecimosCelsius) public"]
 
 const contratoEndereco = "0x7290668053c1f1467F93d63561571e1Be3cBeA9A"
-const chainIdPasseo = "0x190F1B46" // 420420422 em hexadecimal
 
 const FormTemperatura = ({ carga }) => {
+
+    const [metamaskInfo, setMetamaskInfo] = useState({
+        mensagemRetorno: "",
+    })
+
+    const walletAddress = useRecoilValue(walletAddressState)
+
     const [idEntrega, setIdEntrega] = useState(carga.idEntrega)
 
     const [afericao, setAfericao] = useState({
@@ -30,62 +41,38 @@ const FormTemperatura = ({ carga }) => {
 
     const handleAferirTemperatura = async (e) => {
         e.preventDefault()
+
+        setMetamaskInfo({
+            mensagemRetorno: "Aguardando ação do usuário ...",
+        })
+
+        if (!window.ethereum) {
+            setMetamaskInfo({
+                mensagemRetorno: "MetaMask não está disponível",
+            })
+            return
+        }
+
+        if (!walletAddress) {
+            setMetamaskInfo({
+                mensagemRetorno: "Priemeiro conecte a MetaMask para continuar",
+            })
+            return
+        }
+
         setAfericao({
             ...afericao,
             idEntrega: idEntrega,
         })
 
         if (!afericao.temperatura || afericao.temperatura === "") {
-            alert("Endereço inválida ou não informada.")
+            setMetamaskInfo({
+                mensagemRetorno: "Informe uma aferição válida",
+            })
             return
         }
 
         try {
-            // Verifica se o MetaMask está disponível
-            if (!window.ethereum) {
-                alert("MetaMask não está disponível")
-                return
-            }
-
-            // Verifica se está na rede Passeo
-            const chainIdAtual = await window.ethereum.request({ method: "eth_chainId" })
-
-            if (chainIdAtual !== chainIdPasseo) {
-                try {
-                    await window.ethereum.request({
-                        method: "wallet_switchEthereumChain",
-                        params: [{ chainId: chainIdPasseo }],
-                    })
-                } catch (switchError) {
-                    if (switchError.code === 4902) {
-                        try {
-                            await window.ethereum.request({
-                                method: "wallet_addEthereumChain",
-                                params: [
-                                    {
-                                        chainId: chainIdPasseo,
-                                        chainName: "Paseo PassetHub",
-                                        rpcUrls: ["https://testnet-passet-hub-eth-rpc.polkadot.io"],
-                                        nativeCurrency: {
-                                            name: "PAS",
-                                            symbol: "PAS",
-                                            decimals: 18,
-                                        },
-                                        blockExplorerUrls: ["https://explorer.passeo.io"],
-                                    },
-                                ],
-                            })
-                        } catch (addError) {
-                            alert("Erro ao adicionar a rede Passeo ao MetaMask.")
-                            return
-                        }
-                    } else {
-                        alert("Troca de rede recusada. Conecte à rede Passeo para continuar.")
-                        return
-                    }
-                }
-            }
-
             // Solicita conexão com a carteira
             await window.ethereum.request({ method: "eth_requestAccounts" })
 
@@ -96,20 +83,18 @@ const FormTemperatura = ({ carga }) => {
             // Instancia o contrato
             const contrato = new ethers.Contract(contratoEndereco, contratoABI, signer)
 
-            // Chama a função do contrato com a placa
-            const tx = await contrato.adicionarAfericao(afericao.idEntrega, afericao.temperatura)
-            await tx.wait()
-        } catch (error) {
-            console.error("Erro ao aferir temperatura:", error)
-
-            // Tenta extrair a razão do revert
-            if (error.reason) {
-                alert(`Erro ao aferir temperatura: ${error.reason}`)
-            } else if (error.message) {
-                alert(`Erro ao aferir temperatura: ${error.message}`)
-            } else {
-                alert("Erro ao aferir temperatura. Veja o console para mais detalhes.")
+            try {
+                // Chama a função do contrato com a placa
+                const tx = await contrato.adicionarAfericao(afericao.idEntrega, afericao.temperatura)
+                await tx.wait()
+                setMetamaskInfo({
+                    mensagemRetorno: "Aferição registrada com sucesso!",
+                })
+            } catch (txError) {
+                handleMetamaskError(txError, "Erro ao cadastrar aferição", setMetamaskInfo)
             }
+        } catch (error) {
+            handleMetamaskError(error, "Erro inesperado", setMetamaskInfo)
         }
     }
 
@@ -123,11 +108,18 @@ const FormTemperatura = ({ carga }) => {
                 <Input label="ID da carga" type="text" id="idEntrega" obrigatorio={true} value={carga.idEntrega} onChange={handleChange} disabled={true} />
                 <Input label="Temperatura Celsius" type="number" id="temperatura" obrigatorio={true} onChange={handleChange} />
                 <div className="text-center">
-                    <Botao classBootstrap="btn-success" largura={"100%"} onClick={handleAferirTemperatura}>
+                    <button
+                        type="button"
+                        className="btn btn-success mt-5"
+                        onClick={handleAferirTemperatura}
+                        data-bs-toggle="modal"
+                        data-bs-target="#loginMetamask"
+                    >
                         Registrar temperatura
-                    </Botao>
+                    </button>
                 </div>
             </form>
+            <ModalMetamask mensagem={metamaskInfo.mensagemRetorno} />
         </>
     )
 }
