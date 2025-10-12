@@ -6,7 +6,6 @@ import styled from "styled-components"
 const ContainerStyled = styled.div`
     box-sizing: border-box;
     max-width: 100vw;
-    height: 100vh;
 `
 
 const SectionPrincipalStyled = styled.section`

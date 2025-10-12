@@ -18,7 +18,7 @@ const DetalhesComprovanteStyled = styled.div`
     flex-direction: column;
 
     @media (min-width: 768px) {
-        max-width: 500px;
+        max-width: 850px;
     }
 `
 
@@ -120,7 +120,7 @@ const ComprovanteEntrega = () => {
                 <span> {infoEntrega?.address || "Não disponível"} </span>
 
                 <h4 className="mt-3">TXID</h4>
-                <span> {infoEntrega?.txId || "Não disponível"} </span>
+                <span> <a href={`https://blockscout-passet-hub.parity-testnet.parity.io/tx/${infoEntrega?.txId || "#"}`} target="_blank">{infoEntrega?.txId || "Não disponível"}</a></span>
 
                 <h4 className="mt-3">Histórico Temperatura</h4>
                 <span>
